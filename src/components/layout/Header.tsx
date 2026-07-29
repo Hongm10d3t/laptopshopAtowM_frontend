@@ -1,11 +1,21 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAppSelector } from '../../hooks/useAppSelector'
+import { logout } from '../../services/auth/authService'
 import TopBar from './TopBar'
 import CategoryNav from './CategoryNav'
 import styles from './Header.module.css'
 
-// Trạng thái đăng nhập/giỏ hàng CHƯA nối vào authSlice/cartSlice thật —
-// đó là việc của Gói 1.3 (Auth) và Gói 3.1 (Cart). Ở đây chỉ dựng khung tĩnh.
+// Giỏ hàng CHƯA nối vào cartSlice thật — đó là việc của Gói 3.1. Trạng thái
+// đăng nhập ở đây đã là thật (authSlice, Gói 1.3).
 function Header() {
+  const { accessToken, email } = useAppSelector((state) => state.auth)
+  const navigate = useNavigate()
+
+  async function handleLogout() {
+    await logout()
+    navigate('/')
+  }
+
   return (
     <header className={styles.header}>
       <TopBar />
@@ -34,10 +44,17 @@ function Header() {
             <span className={styles.actionLabel}>Đơn hàng</span>
             <span className={styles.actionSub}>Theo dõi đơn</span>
           </Link>
-          <Link to="/login" className={styles.actionItem}>
-            <span className={styles.actionLabel}>Tài khoản</span>
-            <span className={styles.actionSub}>Đăng nhập</span>
-          </Link>
+          {accessToken ? (
+            <button type="button" className={styles.actionItem} onClick={handleLogout}>
+              <span className={styles.actionLabel}>{email}</span>
+              <span className={styles.actionSub}>Đăng xuất</span>
+            </button>
+          ) : (
+            <Link to="/login" className={styles.actionItem}>
+              <span className={styles.actionLabel}>Tài khoản</span>
+              <span className={styles.actionSub}>Đăng nhập</span>
+            </Link>
+          )}
           <Link to="/cart" className={styles.cartItem}>
             <span className={styles.cartBadge}>0</span>
             <span className={styles.actionLabel}>Giỏ hàng</span>

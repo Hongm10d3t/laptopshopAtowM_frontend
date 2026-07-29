@@ -14,3 +14,13 @@ export function getApiErrorMessage(error: unknown, fallback = 'Đã có lỗi x�
   }
   return fallback
 }
+
+// Dùng khi UI cần rẽ nhánh theo đúng loại lỗi (vd ACCOUNT_NOT_VERIFIED gợi ý
+// link sang trang xác thực email) thay vì chỉ hiển thị message chung chung.
+export function getApiErrorCode(error: unknown): string | undefined {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data as ApiResponse<unknown> | undefined
+    return data?.errorCode
+  }
+  return undefined
+}

@@ -1,9 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
+import authReducer from './slices/authSlice'
 
-// Chưa có slice nghiệp vụ nào (authSlice/cartSlice/... sẽ thêm khi implement
-// từng feature) — reducer rỗng chỉ để chứng minh store wiring hoạt động.
+// authSlice là slice nghiệp vụ đầu tiên (Gói 1.3) — cartSlice/productSlice/...
+// sẽ thêm khi implement từng feature tương ứng.
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    auth: authReducer,
+  },
 })
 
 export type RootState = ReturnType<typeof store.getState>
