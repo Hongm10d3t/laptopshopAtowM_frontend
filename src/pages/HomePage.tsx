@@ -1,12 +1,14 @@
 import { env } from '../config/env'
 
-// Placeholder tối thiểu để chứng minh Router hoạt động — sẽ thay bằng trang
-// chủ thật khi bắt đầu implement nghiệp vụ Catalog.
+// Placeholder tối thiểu — sẽ thay bằng nội dung trang chủ thật (banner, sản
+// phẩm nổi bật, brand nổi bật) ở Gói 2.1. MainLayout đã tự bọc <main>, nên ở
+// đây chỉ render nội dung con, không lặp lại thẻ <main>.
 function HomePage() {
   return (
-    <main>
+    <section>
       <h1>{env.appName} Frontend Ready</h1>
-    </main>
+      <p>Trang chủ thật sẽ được xây ở Gói 2.1 (Catalog).</p>
+    </section>
   )
 }
 

@@ -1,13 +1,16 @@
 import { Route, Routes } from 'react-router-dom'
+import MainLayout from '../components/layout/MainLayout'
 import HomePage from '../pages/HomePage'
 
-// Route config tập trung tại đây. Chỉ có "/" ở foundation phase — route
-// Login/Product/Admin... sẽ thêm khi implement từng feature. AuthGuard/
-// RoleGuard (folder guard/) chưa áp dụng ở đây, để dành Authentication phase.
+// Route config tập trung tại đây. MainLayout bọc mọi route Storefront (Guest/
+// Customer) — Admin sẽ có layout riêng, thêm route "/admin/**" ở Phase 6-9.
+// AuthGuard/RoleGuard (folder guard/) chưa áp dụng ở đây, để dành Gói 1.4.
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<HomePage />} />
+      </Route>
     </Routes>
   )
 }
