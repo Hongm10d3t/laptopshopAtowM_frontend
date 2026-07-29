@@ -88,12 +88,32 @@
   font-size: 0.8rem;
   line-height: 1.3;
   /* Reset mặc định của <button> — class này dùng chung cho cả <Link> lẫn
-     <button> (vd nút Đăng xuất ở Header), không ảnh hưởng khi áp cho <Link>. */
+     <button>, không ảnh hưởng khi áp cho <Link>. */
   border: none;
   background: none;
   padding: 0;
   text-align: left;
   cursor: pointer;
+}
+
+.accountMenu {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.logoutButton {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.logoutButton:hover {
+  color: var(--color-accent-red);
 }
 
 .actionLabel {

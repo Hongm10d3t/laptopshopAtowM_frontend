@@ -1,8 +1,12 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { login } from '../../services/auth/authService'
 import { getApiErrorCode, getApiErrorMessage } from '../../utils/apiError'
 import styles from './LoginPage.module.css'
+
+interface LocationState {
+  from?: { pathname: string }
+}
 
 interface FormState {
   email: string
@@ -20,6 +24,11 @@ function LoginPage() {
   const [isNotVerified, setIsNotVerified] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
+  // AuthGuard (Gói 1.4) điều hướng sang đây kèm state.from = trang người
+  // dùng định vào trước khi bị chặn — đăng nhập xong quay lại đúng đó thay
+  // vì luôn về "/".
+  const from = (location.state as LocationState | null)?.from?.pathname ?? '/'
 
   function handleChange(field: keyof FormState) {
     return (event: ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +48,7 @@ function LoginPage() {
     setIsSubmitting(true)
     try {
       await login({ email: form.email.trim(), password: form.password })
-      navigate('/')
+      navigate(from, { replace: true })
     } catch (err) {
       setError(getApiErrorMessage(err))
       setIsNotVerified(getApiErrorCode(err) === 'ACCOUNT_NOT_VERIFIED')

@@ -11,7 +11,12 @@ function Header() {
   const { accessToken, email } = useAppSelector((state) => state.auth)
   const navigate = useNavigate()
 
+  // window.confirm — đủ dùng cho 1 xác nhận đơn giản, chưa cần dựng hệ thống
+  // modal riêng chỉ vì 1 chỗ dùng.
   async function handleLogout() {
+    if (!window.confirm('Bạn có chắc muốn đăng xuất?')) {
+      return
+    }
     await logout()
     navigate('/')
   }
@@ -45,10 +50,15 @@ function Header() {
             <span className={styles.actionSub}>Theo dõi đơn</span>
           </Link>
           {accessToken ? (
-            <button type="button" className={styles.actionItem} onClick={handleLogout}>
-              <span className={styles.actionLabel}>{email}</span>
-              <span className={styles.actionSub}>Đăng xuất</span>
-            </button>
+            <div className={styles.accountMenu}>
+              <Link to="/account/profile" className={styles.actionItem}>
+                <span className={styles.actionLabel}>{email}</span>
+                <span className={styles.actionSub}>Tài khoản</span>
+              </Link>
+              <button type="button" className={styles.logoutButton} onClick={handleLogout}>
+                Đăng xuất
+              </button>
+            </div>
           ) : (
             <Link to="/login" className={styles.actionItem}>
               <span className={styles.actionLabel}>Tài khoản</span>

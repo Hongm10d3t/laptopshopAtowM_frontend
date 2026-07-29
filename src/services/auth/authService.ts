@@ -3,6 +3,7 @@ import { store } from '../../redux/store'
 import { clearCredentials, setCredentials } from '../../redux/slices/authSlice'
 import { deriveCredentials } from '../../utils/session'
 import type { ApiResponse } from '../../types/common/apiResponse'
+import type { ChangePasswordRequest } from '../../types/auth/changePassword'
 import type { ResendVerificationEmailRequest, VerifyEmailRequest } from '../../types/auth/emailVerification'
 import type { LoginRequest, LoginResponse } from '../../types/auth/login'
 import type { RegisterRequest, RegisterResponse } from '../../types/auth/register'
@@ -47,14 +48,25 @@ export async function logout(): Promise<void> {
 }
 
 // Gọi 1 lần lúc app khởi động (App.tsx) để khôi phục phiên đăng nhập từ
-// refresh token cookie (nếu còn hạn) — không thì coi như chưa đăng nhập, im
-// lặng không hiện lỗi (đây không phải hành động người dùng chủ động bấm).
+// refresh token cookie (nếu còn hạn). Thất bại (chưa từng đăng nhập/cookie
+// hết hạn) vẫn PHẢI dispatch clearCredentials để tắt cờ isRestoring — nếu chỉ
+// im lặng bỏ qua, authSlice kẹt mãi ở isRestoring=true (giá trị khởi tạo),
+// khiến AuthGuard (Gói 1.4) treo loading vĩnh viễn thay vì điều hướng /login.
 export async function restoreSession(): Promise<void> {
   try {
     const response = await apiClient.post<ApiResponse<LoginResponse>>('/auth/refresh')
     store.dispatch(setCredentials(deriveCredentials(response.data.data)))
   } catch {
-    // Không có phiên hợp lệ (chưa từng đăng nhập / cookie hết hạn/rỗng) —
-    // giữ nguyên trạng thái "chưa đăng nhập" mặc định của authSlice.
+    store.dispatch(clearCredentials())
   }
+}
+
+// POST /auth/change-password — yêu cầu đã đăng nhập. Backend revoke refresh
+// token hiện tại ngay sau khi đổi thành công (giống logout — access token cũ
+// vẫn dùng được tới khi hết hạn tự nhiên, xem ChangePasswordService.java) —
+// vì vậy FE chủ động clearCredentials() ngay sau khi API thành công, không
+// đợi tới lần refresh kế tiếp mới phát hiện phiên đã chết.
+export async function changePassword(payload: ChangePasswordRequest): Promise<void> {
+  await apiClient.post<ApiResponse<null>>('/auth/change-password', payload)
+  store.dispatch(clearCredentials())
 }
