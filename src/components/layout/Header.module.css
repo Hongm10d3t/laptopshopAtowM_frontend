@@ -44,34 +44,61 @@
   color: var(--color-primary);
 }
 
+/* Thanh tìm kiếm dạng pill bo tròn, đồng bộ style với ô tìm kiếm ở trang
+   Danh sách sản phẩm — có icon kính lúp, focus có viền primary rõ ràng. */
 .searchForm {
   flex: 1;
   display: flex;
+  align-items: center;
   max-width: 640px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding-left: 1rem;
+  background: var(--color-bg-muted);
+  transition: border-color 0.15s ease;
+}
+
+.searchForm:focus-within {
+  border-color: var(--color-primary);
+  background: var(--color-bg);
+}
+
+.searchIcon {
+  display: flex;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.searchIcon svg {
+  width: 17px;
+  height: 17px;
 }
 
 .searchInput {
   flex: 1;
-  padding: 0.6rem 1rem;
-  border: 1px solid var(--color-border);
-  border-right: none;
-  border-radius: 0.5rem 0 0 0.5rem;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0.65rem 0.75rem;
   font-size: 0.9rem;
 }
 
-.searchInput:focus {
-  outline: none;
-  border-color: var(--color-primary);
-}
-
 .searchButton {
-  padding: 0 1.25rem;
+  padding: 0.6rem 1.4rem;
   border: none;
-  border-radius: 0 0.5rem 0.5rem 0;
+  border-radius: 999px;
   background: var(--color-primary);
   color: #fff;
   font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
+  margin: 0.2rem;
+  flex-shrink: 0;
+}
+
+.searchButton:hover {
+  background: var(--color-primary-dark);
 }
 
 .actions {
@@ -84,7 +111,8 @@
 
 .actionItem {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.8rem;
   line-height: 1.3;
   /* Reset mặc định của <button> — class này dùng chung cho cả <Link> lẫn
@@ -94,6 +122,34 @@
   padding: 0;
   text-align: left;
   cursor: pointer;
+  color: var(--color-text-muted);
+  transition: color 0.15s ease;
+}
+
+.actionItem:hover {
+  color: var(--color-primary);
+}
+
+.actionItem:hover .actionLabel {
+  color: var(--color-primary);
+}
+
+.actionIcon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.actionIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.actionText {
+  display: flex;
+  flex-direction: column;
 }
 
 .accountMenu {
@@ -125,16 +181,10 @@
   color: var(--color-text-muted);
 }
 
-.cartItem {
-  composes: actionItem;
-  position: relative;
-  padding-left: 1.5rem;
-}
-
 .cartBadge {
   position: absolute;
-  left: 0;
-  top: -0.35rem;
+  right: -0.5rem;
+  top: -0.4rem;
   min-width: 1.1rem;
   height: 1.1rem;
   padding: 0 0.25rem;

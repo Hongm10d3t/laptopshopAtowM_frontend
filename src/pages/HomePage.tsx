@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import ProductCard from '../components/product/ProductCard'
 import { getActiveBrands } from '../services/catalog/brandService'
 import { searchProducts } from '../services/catalog/productService'
-import { formatPriceRange } from '../utils/currency'
 import { getApiErrorMessage } from '../utils/apiError'
 import type { BrandPublicResponse } from '../types/catalog/brand'
 import type { ProductListItemResponse } from '../types/catalog/product'
@@ -54,18 +54,7 @@ function HomePage() {
         ) : (
           <div className={styles.productGrid}>
             {featuredProducts.map((product) => (
-              <Link key={product.id} to={`/products/${product.slug}`} className={styles.productCard}>
-                {product.thumbnailUrl ? (
-                  <img src={product.thumbnailUrl} alt={product.name} className={styles.productImage} />
-                ) : (
-                  <div className={styles.productImagePlaceholder}>{product.name}</div>
-                )}
-                <p className={styles.productName}>{product.name}</p>
-                <p className={styles.productMeta}>
-                  {product.brandName} · {product.categoryName}
-                </p>
-                <p className={styles.productPrice}>{formatPriceRange(product.priceFrom, product.priceTo)}</p>
-              </Link>
+              <ProductCard key={product.id} product={product} />
             ))}
             {featuredProducts.length === 0 && <p>Chưa có sản phẩm nào.</p>}
           </div>

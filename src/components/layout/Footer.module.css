@@ -1,33 +1,59 @@
+/* Footer nền tối — kiểu "bookend" tương phản với phần nội dung nền sáng,
+   phổ biến trên các sàn TMĐT thật, tách bạch rõ ràng điểm kết thúc trang. */
 .footer {
-  background: var(--color-bg);
-  border-top: 1px solid var(--color-border);
+  background: #111827;
+  color: #9ca3af;
   margin-top: 3rem;
 }
 
 .content {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 2.5rem 1.5rem 2rem;
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   gap: 2rem;
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 1.15rem;
   font-weight: 700;
-  margin: 0 0 0.5rem;
+  color: #fff;
+  margin: 0 0 0.75rem;
+}
+
+.brandMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 0.45rem;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.brandAccent {
+  color: var(--color-primary);
 }
 
 .desc {
-  color: var(--color-text-muted);
+  color: #9ca3af;
   font-size: 0.9rem;
   margin: 0;
+  max-width: 320px;
+  line-height: 1.5;
 }
 
 .heading {
   font-weight: 600;
-  margin: 0 0 0.75rem;
+  color: #fff;
+  margin: 0 0 0.9rem;
+  font-size: 0.9rem;
 }
 
 .content ul {
@@ -36,16 +62,42 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
   font-size: 0.9rem;
-  color: var(--color-text-muted);
+  color: #9ca3af;
+}
+
+.content ul a {
+  color: #9ca3af;
+  transition: color 0.15s ease;
+}
+
+.content ul a:hover {
+  color: #fff;
+}
+
+.iconRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.itemIcon {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+.itemIcon svg {
+  width: 14px;
+  height: 14px;
 }
 
 .copyright {
   text-align: center;
   font-size: 0.8rem;
-  color: var(--color-text-muted);
-  border-top: 1px solid var(--color-border);
+  color: #6b7280;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding: 1rem 1.5rem;
   margin: 0;
 }
