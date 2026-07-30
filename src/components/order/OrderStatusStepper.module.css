@@ -1,0 +1,104 @@
+.stepper {
+  display: flex;
+  align-items: flex-start;
+}
+
+.stepCompleted,
+.stepCurrent,
+.stepUpcoming {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  text-align: center;
+}
+
+.stepCompleted:not(:last-child)::after,
+.stepCurrent:not(:last-child)::after,
+.stepUpcoming:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--color-border);
+  z-index: 0;
+}
+
+.stepCompleted:not(:last-child)::after {
+  background: var(--color-primary);
+}
+
+.circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.stepCompleted .circle {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.stepCurrent .circle {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 0 0 4px var(--color-bg-muted);
+}
+
+.stepUpcoming .circle {
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  border: 1.5px solid var(--color-border);
+}
+
+.label {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  max-width: 100px;
+}
+
+.stepCompleted .label,
+.stepCurrent .label {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.cancelledBanner {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 0.6rem;
+  background: #fee2e2;
+  color: #991b1b;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.cancelledIcon {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.cancelledIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 640px) {
+  .label {
+    display: none;
+  }
+}

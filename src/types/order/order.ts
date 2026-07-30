@@ -55,3 +55,13 @@ export interface OrderResponse {
   createdAt: string
   updatedAt: string
 }
+
+// Khớp OrderSummaryResponse — dùng cho GET /customer/orders (danh sách),
+// không kèm items để tránh N+1 khi phân trang.
+export interface OrderSummaryResponse {
+  id: number
+  status: OrderStatus
+  paymentMethod: PaymentMethod
+  totalAmount: number
+  createdAt: string
+}

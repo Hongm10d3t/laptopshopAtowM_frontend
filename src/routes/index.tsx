@@ -13,6 +13,8 @@ import AddressFormPage from '../pages/account/AddressFormPage'
 import AddressListPage from '../pages/account/AddressListPage'
 import ChangePasswordPage from '../pages/account/ChangePasswordPage'
 import ProfilePage from '../pages/account/ProfilePage'
+import OrderListPage from '../pages/account/OrderListPage'
+import OrderDetailPage from '../pages/account/OrderDetailPage'
 import CartPage from '../pages/cart/CartPage'
 import CheckoutPage from '../pages/checkout/CheckoutPage'
 
@@ -37,6 +39,8 @@ function AppRoutes() {
           <Route path="/account" element={<AccountLayout />}>
             <Route index element={<ProfilePage />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="orders" element={<OrderListPage />} />
+            <Route path="orders/:id" element={<OrderDetailPage />} />
             <Route path="addresses" element={<AddressListPage />} />
             <Route path="addresses/new" element={<AddressFormPage />} />
             <Route path="addresses/:id/edit" element={<AddressFormPage />} />
