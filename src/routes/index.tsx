@@ -17,6 +17,7 @@ import OrderListPage from '../pages/account/OrderListPage'
 import OrderDetailPage from '../pages/account/OrderDetailPage'
 import CartPage from '../pages/cart/CartPage'
 import CheckoutPage from '../pages/checkout/CheckoutPage'
+import VnPayReturnPage from '../pages/payment/VnPayReturnPage'
 
 // Route config tập trung tại đây. MainLayout bọc mọi route Storefront (Guest/
 // Customer) — Admin sẽ có layout riêng, thêm route "/admin/**" ở Phase 6-9.
@@ -32,6 +33,7 @@ function AppRoutes() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/payment/vnpay-return" element={<VnPayReturnPage />} />
 
         <Route element={<AuthGuard />}>
           <Route path="/cart" element={<CartPage />} />

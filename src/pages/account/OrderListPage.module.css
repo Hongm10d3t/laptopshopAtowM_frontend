@@ -133,6 +133,25 @@
   cursor: not-allowed;
 }
 
+.rowPayButton {
+  border: none;
+  background: none;
+  color: #0068ff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.rowPayButton:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.rowPayButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .pagination {
   display: flex;
   align-items: center;

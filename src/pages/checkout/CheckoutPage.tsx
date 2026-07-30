@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { getCart } from '../../services/cart/cartService'
 import { listAddresses } from '../../services/user/addressService'
 import { checkout } from '../../services/order/orderService'
+import { getPaymentUrl } from '../../services/payment/paymentService'
 import { validateVoucher } from '../../services/voucher/voucherService'
 import { formatCurrency } from '../../utils/currency'
 import { formatOrderStatus, formatPaymentMethod } from '../../utils/orderStatus'
@@ -17,8 +18,8 @@ const PAYMENT_METHODS: PaymentMethod[] = ['COD', 'ONLINE']
 
 // Checkout 1 trang (Gói 3.2) — chọn địa chỉ, áp voucher (xem trước, không
 // redeem), chọn phương thức thanh toán, đặt hàng đúng 1 lệnh POST
-// /customer/orders. Đơn ONLINE tạo xong vẫn ở trạng thái chờ thanh toán —
-// nút "Thanh toán ngay" thuộc Phase 5 (VNPay), chưa có ở đây.
+// /customer/orders. Đơn ONLINE tạo xong đưa thẳng nút "Thanh toán ngay"
+// (Gói 5.1) thay vì chỉ ghi chú thụ động — đỡ phải tự tìm đường thanh toán.
 function CheckoutPage() {
   const [cart, setCart] = useState<CartResponse | null>(null)
   const [addresses, setAddresses] = useState<AddressResponse[]>([])
@@ -37,6 +38,9 @@ function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [completedOrder, setCompletedOrder] = useState<OrderResponse | null>(null)
+
+  const [isPaying, setIsPaying] = useState(false)
+  const [payError, setPayError] = useState<string | null>(null)
 
   useEffect(() => {
     Promise.all([getCart(), listAddresses()])
@@ -91,6 +95,21 @@ function CheckoutPage() {
     }
   }
 
+  // Điều hướng CẢ TRANG (không phải điều hướng SPA) — đích là domain VNPay,
+  // không phải route nội bộ. Không cần setIsPaying(false) khi thành công vì
+  // trang sẽ rời đi ngay sau đó.
+  async function handlePayNow(orderId: number) {
+    setIsPaying(true)
+    setPayError(null)
+    try {
+      const { paymentUrl } = await getPaymentUrl(orderId)
+      window.location.href = paymentUrl
+    } catch (err) {
+      setPayError(getApiErrorMessage(err, 'Không thể tạo giao dịch thanh toán'))
+      setIsPaying(false)
+    }
+  }
+
   if (isLoading) {
     return <p>Đang tải...</p>
   }
@@ -131,7 +150,21 @@ function CheckoutPage() {
         </div>
 
         {completedOrder.paymentMethod === 'ONLINE' && (
-          <p className={styles.onlineNote}>Đơn hàng của bạn đang chờ thanh toán online.</p>
+          <div className={styles.payNowBlock}>
+            <button
+              type="button"
+              className={styles.payNowButton}
+              disabled={isPaying}
+              onClick={() => handlePayNow(completedOrder.id)}
+            >
+              {isPaying ? 'Đang chuyển tới cổng thanh toán...' : 'Thanh toán ngay với VNPay'}
+            </button>
+            {payError && <p className={styles.error}>{payError}</p>}
+            <p className={styles.payNowHint}>
+              Bạn sẽ được chuyển sang cổng thanh toán VNPay (sandbox) để hoàn tất — có thể thanh toán lại sau trong
+              phần chi tiết đơn hàng nếu chưa hoàn tất ngay bây giờ.
+            </p>
+          </div>
         )}
 
         <Link to="/products" className={styles.browseLink}>

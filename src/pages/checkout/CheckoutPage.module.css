@@ -380,10 +380,37 @@
   color: var(--color-accent-red);
 }
 
-.onlineNote {
-  font-size: 0.85rem;
+.payNowBlock {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.payNowButton {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: #0068ff;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.payNowButton:hover:not(:disabled) {
+  opacity: 0.92;
+}
+
+.payNowButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.payNowHint {
+  font-size: 0.8rem;
   color: var(--color-text-muted);
-  margin: 1.25rem 0 0;
+  margin: 0.6rem 0 0;
 }
 
 @media (max-width: 800px) {

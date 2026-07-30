@@ -1,0 +1,62 @@
+.loadingText {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--color-text-muted);
+}
+
+.page {
+  max-width: 480px;
+  margin: 3rem auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.iconSuccess,
+.iconError {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.iconSuccess {
+  background: var(--color-success);
+}
+
+.iconError {
+  background: var(--color-accent-red);
+}
+
+.page h1 {
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.message {
+  color: var(--color-text-muted);
+  margin: 0 0 1rem;
+}
+
+.primaryLink {
+  display: inline-block;
+  padding: 0.7rem 1.6rem;
+  border-radius: 0.5rem;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.secondaryLink {
+  margin-top: 0.9rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}

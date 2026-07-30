@@ -5,10 +5,11 @@ import OrderStatusStepper from '../../components/order/OrderStatusStepper'
 import StarRatingInput from '../../components/review/StarRatingInput'
 import { cancelOrder, getOrder } from '../../services/order/orderService'
 import { createReturnRequest } from '../../services/order/returnRequestService'
+import { getPaymentUrl } from '../../services/payment/paymentService'
 import { createReview, getMyReview } from '../../services/review/reviewService'
 import { formatCurrency } from '../../utils/currency'
 import { formatDateTime } from '../../utils/date'
-import { formatPaymentMethod, isOrderCancellableByCustomer } from '../../utils/orderStatus'
+import { formatPaymentMethod, isOrderCancellableByCustomer, isOrderPayableOnline } from '../../utils/orderStatus'
 import { getApiErrorMessage } from '../../utils/apiError'
 import type { OrderResponse } from '../../types/order/order'
 import styles from './OrderDetailPage.module.css'
@@ -31,6 +32,9 @@ function OrderDetailPage() {
 
   const [isCancelling, setIsCancelling] = useState(false)
   const [cancelError, setCancelError] = useState<string | null>(null)
+
+  const [isPaying, setIsPaying] = useState(false)
+  const [payError, setPayError] = useState<string | null>(null)
 
   const [isReturnFormOpen, setIsReturnFormOpen] = useState(false)
   const [returnReason, setReturnReason] = useState('')
@@ -95,6 +99,22 @@ function OrderDetailPage() {
     }
   }
 
+  // Điều hướng cả trang (window.location.href) sang domain VNPay — không
+  // phải điều hướng SPA. Dùng chung cho cả lần đầu lẫn "thanh toán lại"
+  // (Backend không có endpoint retry riêng, xem CustomerOrderController).
+  async function handlePayNow() {
+    if (!order) return
+    setIsPaying(true)
+    setPayError(null)
+    try {
+      const { paymentUrl } = await getPaymentUrl(order.id)
+      window.location.href = paymentUrl
+    } catch (err) {
+      setPayError(getApiErrorMessage(err, 'Không thể tạo giao dịch thanh toán'))
+      setIsPaying(false)
+    }
+  }
+
   async function handleSubmitReturnRequest(event: FormEvent) {
     event.preventDefault()
     if (!order) return
@@ -148,6 +168,7 @@ function OrderDetailPage() {
 
   const rawTotal = order.totalAmount + order.discountAmount
   const canCancel = isOrderCancellableByCustomer(order.status)
+  const canPayOnline = isOrderPayableOnline(order.status, order.paymentMethod)
   // Viết đánh giá và yêu cầu trả hàng cùng chung điều kiện DELIVERED — 2 biến
   // riêng để đọc code rõ ý nghĩa từng chỗ dùng, dù giá trị hiện giống nhau.
   const canRequestReturn = order.status === 'DELIVERED'
@@ -177,6 +198,15 @@ function OrderDetailPage() {
           </div>
         </div>
         <OrderStatusStepper status={order.status} />
+
+        {canPayOnline && (
+          <div className={styles.payNowBlock}>
+            <button type="button" className={styles.payNowButton} disabled={isPaying} onClick={handlePayNow}>
+              {isPaying ? 'Đang chuyển tới cổng thanh toán...' : 'Thanh toán ngay với VNPay'}
+            </button>
+            {payError && <p className={styles.actionError}>{payError}</p>}
+          </div>
+        )}
 
         {(canCancel || canRequestReturn) && (
           <div className={styles.actionsRow}>

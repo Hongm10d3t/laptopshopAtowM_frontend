@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import OrderStatusBadge from '../../components/order/OrderStatusBadge'
 import { cancelOrder, listOrders } from '../../services/order/orderService'
+import { getPaymentUrl } from '../../services/payment/paymentService'
 import { formatCurrency } from '../../utils/currency'
 import { formatDate } from '../../utils/date'
-import { formatPaymentMethod, isOrderCancellableByCustomer } from '../../utils/orderStatus'
+import { formatPaymentMethod, isOrderCancellableByCustomer, isOrderPayableOnline } from '../../utils/orderStatus'
 import { getApiErrorMessage } from '../../utils/apiError'
 import type { OrderSummaryResponse } from '../../types/order/order'
 import type { PageResponse } from '../../types/common/pageResponse'
@@ -14,8 +15,9 @@ const PAGE_SIZE = 10
 
 // Danh sách đơn hàng của tôi (Gói 4.1) — GET /customer/orders không nhận
 // filter theo status (chỉ page/size/sort) nên không có bộ lọc trạng thái ở
-// đây, tránh dựng UI filter không hoạt động thật. Gói 4.2 thêm nút hủy nhanh
-// ngay trong danh sách, không bắt phải vào chi tiết đơn mới hủy được.
+// đây, tránh dựng UI filter không hoạt động thật. Gói 4.2 thêm nút hủy nhanh,
+// Gói 5.1/5.2 thêm nút thanh toán ngay/lại — cả 2 đều thao tác thẳng trong
+// danh sách, không bắt phải vào chi tiết đơn mới làm được.
 function OrderListPage() {
   const [pageInfo, setPageInfo] = useState<Omit<PageResponse<OrderSummaryResponse>, 'content'> | null>(null)
   const [orders, setOrders] = useState<OrderSummaryResponse[]>([])
@@ -23,6 +25,7 @@ function OrderListPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [cancellingOrderId, setCancellingOrderId] = useState<number | null>(null)
+  const [payingOrderId, setPayingOrderId] = useState<number | null>(null)
 
   function loadOrders() {
     setIsLoading(true)
@@ -52,6 +55,20 @@ function OrderListPage() {
       setError(getApiErrorMessage(err, 'Không thể hủy đơn hàng'))
     } finally {
       setCancellingOrderId(null)
+    }
+  }
+
+  // Điều hướng cả trang sang domain VNPay — không phải điều hướng SPA, nên
+  // không cần loadOrders()/reset payingOrderId khi thành công (trang rời đi).
+  async function handlePayNow(orderId: number) {
+    setPayingOrderId(orderId)
+    setError(null)
+    try {
+      const { paymentUrl } = await getPaymentUrl(orderId)
+      window.location.href = paymentUrl
+    } catch (err) {
+      setError(getApiErrorMessage(err, 'Không thể tạo giao dịch thanh toán'))
+      setPayingOrderId(null)
     }
   }
 
@@ -99,6 +116,16 @@ function OrderListPage() {
                     <Link to={`/account/orders/${order.id}`} className={styles.detailLink}>
                       Xem chi tiết →
                     </Link>
+                    {isOrderPayableOnline(order.status, order.paymentMethod) && (
+                      <button
+                        type="button"
+                        className={styles.rowPayButton}
+                        disabled={payingOrderId === order.id}
+                        onClick={() => handlePayNow(order.id)}
+                      >
+                        {payingOrderId === order.id ? 'Đang chuyển...' : 'Thanh toán ngay'}
+                      </button>
+                    )}
                     {isOrderCancellableByCustomer(order.status) && (
                       <button
                         type="button"

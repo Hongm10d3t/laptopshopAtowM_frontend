@@ -33,3 +33,12 @@ export function formatPaymentMethod(method: PaymentMethod): string {
 export function isOrderCancellableByCustomer(status: OrderStatus): boolean {
   return status === 'PENDING' || status === 'CONFIRMED'
 }
+
+// ONLINE + PENDING nghĩa là chưa thanh toán xong (Payment PENDING/FAILED) —
+// OrderService.confirm chặn đơn ONLINE chưa PAID nên hễ đơn đã qua PENDING
+// (CONFIRMED trở lên) thì chắc chắn đã thanh toán xong. Customer không có
+// endpoint xem trực tiếp Payment.status nên suy ra qua Order là đủ, không
+// cần thêm field mới. Dùng chung ở OrderListPage/OrderDetailPage/CheckoutPage.
+export function isOrderPayableOnline(status: OrderStatus, paymentMethod: PaymentMethod): boolean {
+  return paymentMethod === 'ONLINE' && status === 'PENDING'
+}
