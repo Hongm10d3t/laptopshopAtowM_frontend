@@ -11,3 +11,10 @@
   margin: 0 auto;
   padding: 1.5rem;
 }
+
+/* CompareBar là position:fixed ở đáy màn hình — thêm đệm dưới để không che
+   nội dung/Footer khi có sản phẩm đang chờ so sánh. */
+.mainWithCompareBar {
+  composes: main;
+  padding-bottom: 5.5rem;
+}

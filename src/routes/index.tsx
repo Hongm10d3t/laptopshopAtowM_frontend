@@ -4,6 +4,7 @@ import AuthGuard from '../guard/AuthGuard'
 import HomePage from '../pages/HomePage'
 import ProductListPage from '../pages/catalog/ProductListPage'
 import ProductDetailPage from '../pages/catalog/ProductDetailPage'
+import ComparePage from '../pages/catalog/ComparePage'
 import LoginPage from '../pages/auth/LoginPage'
 import RegisterPage from '../pages/auth/RegisterPage'
 import VerifyEmailPage from '../pages/auth/VerifyEmailPage'
@@ -12,6 +13,7 @@ import AddressFormPage from '../pages/account/AddressFormPage'
 import AddressListPage from '../pages/account/AddressListPage'
 import ChangePasswordPage from '../pages/account/ChangePasswordPage'
 import ProfilePage from '../pages/account/ProfilePage'
+import CartPage from '../pages/cart/CartPage'
 
 // Route config tập trung tại đây. MainLayout bọc mọi route Storefront (Guest/
 // Customer) — Admin sẽ có layout riêng, thêm route "/admin/**" ở Phase 6-9.
@@ -23,11 +25,13 @@ function AppRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/products" element={<ProductListPage />} />
         <Route path="/products/:slug" element={<ProductDetailPage />} />
+        <Route path="/compare" element={<ComparePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
 
         <Route element={<AuthGuard />}>
+          <Route path="/cart" element={<CartPage />} />
           <Route path="/account" element={<AccountLayout />}>
             <Route index element={<ProfilePage />} />
             <Route path="profile" element={<ProfilePage />} />

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
+import { useAppSelector } from '../../hooks/useAppSelector'
 import { getActiveCategories } from '../../services/catalog/categoryService'
 import type { CategoryPublicResponse } from '../../types/catalog/category'
 import styles from './CategoryNav.module.css'
@@ -22,6 +23,7 @@ function CategoryNav() {
   const [categories, setCategories] = useState<CategoryPublicResponse[]>([])
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const compareCount = useAppSelector((state) => state.compare.items.length)
 
   useEffect(() => {
     let isMounted = true
@@ -82,6 +84,7 @@ function CategoryNav() {
         <li>
           <NavLink to="/compare" className={({ isActive }) => (isActive ? styles.linkActive : undefined)}>
             So sánh
+            {compareCount > 0 && <span className={styles.compareBadge}>{compareCount}</span>}
           </NavLink>
         </li>
       </ul>

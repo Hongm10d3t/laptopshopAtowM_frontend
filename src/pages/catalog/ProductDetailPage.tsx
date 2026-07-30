@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import QuantityStepper from '../../components/cart/QuantityStepper'
 import StarRating from '../../components/review/StarRating'
+import { useAppDispatch } from '../../hooks/useAppDispatch'
+import { useAppSelector } from '../../hooks/useAppSelector'
+import { addCompareItem, openCompareSelector, removeCompareItem } from '../../redux/slices/compareSlice'
+import { addCartItem } from '../../services/cart/cartService'
 import { getProductBySlug } from '../../services/catalog/productService'
 import { getProductReviews, getReviewSummary } from '../../services/review/reviewService'
 import { formatCurrency } from '../../utils/currency'
@@ -10,6 +15,9 @@ import type { ProductDetailResponse, ProductSpecValueResponse } from '../../type
 import type { ReviewResponse, ReviewSummaryResponse } from '../../types/review/review'
 import type { PageResponse } from '../../types/common/pageResponse'
 import styles from './ProductDetailPage.module.css'
+
+const MAX_COMPARE_ITEMS = 3
+const ADD_TO_CART_MESSAGE_MS = 2500
 
 const REVIEW_PAGE_SIZE = 5
 
@@ -30,6 +38,11 @@ function groupSpecifications(specs: ProductSpecValueResponse[]): [string, Produc
 // gọi thật.
 function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>()
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const compareItems = useAppSelector((state) => state.compare.items)
+  const accessToken = useAppSelector((state) => state.auth.accessToken)
 
   const [product, setProduct] = useState<ProductDetailResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -37,6 +50,10 @@ function ProductDetailPage() {
 
   const [selectedVariantId, setSelectedVariantId] = useState<number | null>(null)
   const [activeImageIndex, setActiveImageIndex] = useState(0)
+  const [quantity, setQuantity] = useState(1)
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
+  const [addToCartError, setAddToCartError] = useState<string | null>(null)
+  const [addToCartSuccess, setAddToCartSuccess] = useState(false)
 
   const [reviewSummary, setReviewSummary] = useState<ReviewSummaryResponse | null>(null)
   const [reviewPageInfo, setReviewPageInfo] = useState<Omit<PageResponse<ReviewResponse>, 'content'> | null>(null)
@@ -55,6 +72,9 @@ function ProductDetailPage() {
         setSelectedVariantId(data.variants[0]?.id ?? null)
         setActiveImageIndex(0)
         setReviewPage(1)
+        setQuantity(1)
+        setAddToCartSuccess(false)
+        setAddToCartError(null)
       })
       .catch((err: unknown) => setError(getApiErrorMessage(err, 'Không tìm thấy sản phẩm')))
       .finally(() => setIsLoading(false))
@@ -66,6 +86,12 @@ function ProductDetailPage() {
       .then(setReviewSummary)
       .catch(() => setReviewSummary(null))
   }, [product])
+
+  useEffect(() => {
+    if (!addToCartSuccess) return
+    const timer = setTimeout(() => setAddToCartSuccess(false), ADD_TO_CART_MESSAGE_MS)
+    return () => clearTimeout(timer)
+  }, [addToCartSuccess])
 
   useEffect(() => {
     if (!product) return
@@ -93,6 +119,65 @@ function ProductDetailPage() {
   const selectedVariant = product.variants.find((variant) => variant.id === selectedVariantId) ?? product.variants[0]
   const activeImage = product.images[activeImageIndex] ?? product.images[0]
   const specGroups = groupSpecifications(product.specifications)
+
+  const isInCompare = compareItems.some((item) => item.variantId === selectedVariant?.id)
+
+  // Backend chỉ enforce "cùng danh mục" lúc gọi API compare thật (Gói
+  // ComparePage) — chặn sớm ở đây chỉ để tránh người dùng thêm nhầm rồi mới
+  // biết lỗi, không thay thế validation phía Backend.
+  function handleToggleCompare() {
+    if (!selectedVariant || !product) return
+    if (isInCompare) {
+      dispatch(removeCompareItem(selectedVariant.id))
+      return
+    }
+    if (compareItems.length >= MAX_COMPARE_ITEMS) {
+      window.alert(`Chỉ có thể so sánh tối đa ${MAX_COMPARE_ITEMS} sản phẩm. Vui lòng bỏ bớt trước khi thêm mới.`)
+      return
+    }
+    const conflictingItem = compareItems.find((item) => item.categoryName !== product.categoryName)
+    if (conflictingItem) {
+      window.alert(`Chỉ so sánh được các sản phẩm cùng danh mục "${conflictingItem.categoryName}".`)
+      return
+    }
+    dispatch(
+      addCompareItem({
+        variantId: selectedVariant.id,
+        productId: product.id,
+        productSlug: product.slug,
+        productName: product.name,
+        variantName: selectedVariant.variantName,
+        categoryName: product.categoryName,
+        thumbnailUrl: activeImage?.url ?? null,
+      }),
+    )
+    // Mở luôn modal gợi ý sản phẩm cùng danh mục thay vì bắt người dùng quay
+    // lại tìm sản phẩm khác để so sánh cùng.
+    dispatch(openCompareSelector())
+  }
+
+  // /customer/cart/items yêu cầu đã đăng nhập — chặn sớm bằng accessToken
+  // thay vì để request thật ra 401 rồi hiện lỗi refresh-token khó hiểu, điều
+  // hướng sang /login kèm "from" giống AuthGuard để quay lại đúng trang này
+  // sau khi đăng nhập.
+  async function handleAddToCart() {
+    if (!selectedVariant) return
+    if (!accessToken) {
+      navigate('/login', { state: { from: location } })
+      return
+    }
+    setIsAddingToCart(true)
+    setAddToCartError(null)
+    setAddToCartSuccess(false)
+    try {
+      await addCartItem(selectedVariant.id, quantity)
+      setAddToCartSuccess(true)
+    } catch (err) {
+      setAddToCartError(getApiErrorMessage(err, 'Không thể thêm sản phẩm vào giỏ hàng'))
+    } finally {
+      setIsAddingToCart(false)
+    }
+  }
 
   return (
     <div className={styles.page}>
@@ -157,7 +242,12 @@ function ProductDetailPage() {
                     key={variant.id}
                     type="button"
                     className={variant.id === selectedVariant?.id ? styles.variantActive : styles.variant}
-                    onClick={() => setSelectedVariantId(variant.id)}
+                    onClick={() => {
+                      setSelectedVariantId(variant.id)
+                      setQuantity(1)
+                      setAddToCartSuccess(false)
+                      setAddToCartError(null)
+                    }}
                   >
                     {variant.variantName}
                   </button>
@@ -179,6 +269,32 @@ function ProductDetailPage() {
                 </div>
               )}
             </dl>
+          )}
+
+          {selectedVariant && (
+            <div className={styles.cartRow}>
+              <QuantityStepper value={quantity} disabled={isAddingToCart} onChange={setQuantity} />
+              <button
+                type="button"
+                className={styles.addToCartButton}
+                disabled={isAddingToCart}
+                onClick={handleAddToCart}
+              >
+                {isAddingToCart ? 'Đang thêm...' : 'Thêm vào giỏ hàng'}
+              </button>
+            </div>
+          )}
+          {addToCartSuccess && <p className={styles.addToCartSuccess}>Đã thêm vào giỏ hàng.</p>}
+          {addToCartError && <p className={styles.addToCartErrorText}>{addToCartError}</p>}
+
+          {selectedVariant && (
+            <button
+              type="button"
+              className={isInCompare ? styles.compareButtonActive : styles.compareButton}
+              onClick={handleToggleCompare}
+            >
+              {isInCompare ? '✓ Đang so sánh' : '+ Thêm vào so sánh'}
+            </button>
           )}
         </div>
       </div>

@@ -191,6 +191,70 @@
   font-weight: 600;
 }
 
+.cartRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.addToCartButton {
+  padding: 0.65rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--color-accent-red);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.addToCartButton:hover:not(:disabled) {
+  opacity: 0.92;
+}
+
+.addToCartButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.addToCartSuccess {
+  color: var(--color-success);
+  font-size: 0.85rem;
+  margin: 0.5rem 0 0;
+}
+
+.addToCartErrorText {
+  color: var(--color-accent-red);
+  font-size: 0.85rem;
+  margin: 0.5rem 0 0;
+}
+
+.compareButton,
+.compareButtonActive {
+  align-self: flex-start;
+  margin-top: 0.75rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.compareButton:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.compareButtonActive {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+}
+
 .section {
   border-top: 1px solid var(--color-border);
   padding-top: 1.5rem;

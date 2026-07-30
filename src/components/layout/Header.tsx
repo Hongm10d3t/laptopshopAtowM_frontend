@@ -1,7 +1,10 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
+import { clearCartState } from '../../redux/slices/cartSlice'
 import { logout } from '../../services/auth/authService'
+import { getCart } from '../../services/cart/cartService'
 import TopBar from './TopBar'
 import CategoryNav from './CategoryNav'
 import styles from './Header.module.css'
@@ -41,12 +44,25 @@ const CART_ICON = (
   </svg>
 )
 
-// Giỏ hàng CHƯA nối vào cartSlice thật — đó là việc của Gói 3.1. Trạng thái
-// đăng nhập ở đây đã là thật (authSlice, Gói 1.3).
+// Giỏ hàng nối vào cartSlice thật từ Gói 3.1. Trạng thái đăng nhập ở đây đã
+// là thật (authSlice, Gói 1.3).
 function Header() {
   const { accessToken, email } = useAppSelector((state) => state.auth)
+  const cartQuantity = useAppSelector((state) => state.cart.items.reduce((sum, item) => sum + item.quantity, 0))
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [keyword, setKeyword] = useState('')
+
+  // Nạp giỏ hàng thật khi vừa đăng nhập/khôi phục phiên (accessToken xuất
+  // hiện) để badge đúng ngay từ đầu, không đợi tới lúc vào hẳn trang giỏ
+  // hàng; xoá cartSlice khi đăng xuất để không hiện nhầm giỏ của người trước.
+  useEffect(() => {
+    if (accessToken) {
+      getCart().catch(() => {})
+    } else {
+      dispatch(clearCartState())
+    }
+  }, [accessToken, dispatch])
 
   function handleSearchSubmit(event: FormEvent) {
     event.preventDefault()
@@ -123,7 +139,7 @@ function Header() {
           <Link to="/cart" className={styles.actionItem}>
             <span className={styles.actionIcon}>
               {CART_ICON}
-              <span className={styles.cartBadge}>0</span>
+              {cartQuantity > 0 && <span className={styles.cartBadge}>{cartQuantity}</span>}
             </span>
             <span className={styles.actionText}>
               <span className={styles.actionLabel}>Giỏ hàng</span>
