@@ -14,6 +14,7 @@ import AddressListPage from '../pages/account/AddressListPage'
 import ChangePasswordPage from '../pages/account/ChangePasswordPage'
 import ProfilePage from '../pages/account/ProfilePage'
 import CartPage from '../pages/cart/CartPage'
+import CheckoutPage from '../pages/checkout/CheckoutPage'
 
 // Route config tập trung tại đây. MainLayout bọc mọi route Storefront (Guest/
 // Customer) — Admin sẽ có layout riêng, thêm route "/admin/**" ở Phase 6-9.
@@ -32,6 +33,7 @@ function AppRoutes() {
 
         <Route element={<AuthGuard />}>
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/account" element={<AccountLayout />}>
             <Route index element={<ProfilePage />} />
             <Route path="profile" element={<ProfilePage />} />

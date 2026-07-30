@@ -281,6 +281,23 @@
   color: var(--color-accent-red);
 }
 
+.checkoutButton {
+  width: 100%;
+  margin-top: 1.1rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--color-accent-red);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.checkoutButton:hover {
+  opacity: 0.92;
+}
+
 @media (max-width: 800px) {
   .layout {
     flex-direction: column;

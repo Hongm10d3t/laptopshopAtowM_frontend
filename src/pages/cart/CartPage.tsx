@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import QuantityStepper from '../../components/cart/QuantityStepper'
 import { clearCart, getCart, removeCartItem, updateCartItemQuantity } from '../../services/cart/cartService'
 import { formatCurrency } from '../../utils/currency'
@@ -17,8 +17,8 @@ const PRODUCT_ICON = (
 // Giỏ hàng thật (Gói 3.1) — CartItemResponse trả kèm productName/thumbnailUrl
 // (Backend batch fetch từ Product/ProductImage theo productId). thumbnailUrl
 // có thể null nếu sản phẩm chưa có ảnh -> dùng icon trung tính thay thế.
-// Thanh toán (Checkout) là Gói 3.2, chưa có nút ở đây.
 function CartPage() {
+  const navigate = useNavigate()
   const [cart, setCart] = useState<CartResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -173,6 +173,9 @@ function CartPage() {
               <span>Tổng cộng</span>
               <span className={styles.totalAmount}>{formatCurrency(cart.totalAmount)}</span>
             </div>
+            <button type="button" className={styles.checkoutButton} onClick={() => navigate('/checkout')}>
+              Tiến hành thanh toán
+            </button>
           </aside>
         </div>
       )}

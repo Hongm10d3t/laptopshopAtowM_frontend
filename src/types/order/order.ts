@@ -1,0 +1,57 @@
+// Khớp OrderStatus (backend/.../order/entity/) — đủ 8 trạng thái, dùng lại ở
+// Phase 4 (danh sách/chi tiết đơn) chứ không chỉ checkout.
+export type OrderStatus =
+  | 'PENDING'
+  | 'CONFIRMED'
+  | 'PREPARING'
+  | 'SHIPPING'
+  | 'DELIVERED'
+  | 'CANCELLED'
+  | 'RETURN_REQUESTED'
+  | 'RETURNED'
+
+// Khớp PaymentMethod — chỉ COD thực sự hoàn thiện ở giai đoạn này (VNPay là
+// Phase 5), ONLINE vẫn cho chọn vì Backend đã hỗ trợ tạo Payment PENDING.
+export type PaymentMethod = 'COD' | 'ONLINE'
+
+// Khớp CheckoutRequest (backend/.../order/dto/) — voucherCode/paymentMethod
+// optional, note tối đa 500 ký tự.
+export interface CheckoutRequest {
+  addressId: number
+  note?: string
+  voucherCode?: string
+  paymentMethod?: PaymentMethod
+}
+
+// Khớp OrderItemResponse.
+export interface OrderItemResponse {
+  id: number
+  productVariantId: number
+  productName: string
+  variantName: string
+  sku: string
+  unitPrice: number
+  quantity: number
+  discountAmount: number
+  lineTotal: number
+}
+
+// Khớp OrderResponse.
+export interface OrderResponse {
+  id: number
+  status: OrderStatus
+  paymentMethod: PaymentMethod
+  totalAmount: number
+  discountAmount: number
+  voucherCode: string | null
+  note: string | null
+  recipientName: string
+  phone: string
+  province: string
+  district: string
+  ward: string
+  streetAddress: string
+  items: OrderItemResponse[]
+  createdAt: string
+  updatedAt: string
+}
