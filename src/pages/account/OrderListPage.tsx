@@ -5,13 +5,27 @@ import { cancelOrder, listOrders } from '../../services/order/orderService'
 import { getPaymentUrl } from '../../services/payment/paymentService'
 import { formatCurrency } from '../../utils/currency'
 import { formatDate } from '../../utils/date'
-import { formatPaymentMethod, isOrderCancellableByCustomer, isOrderPayableOnline } from '../../utils/orderStatus'
+import {
+  formatPaymentMethod,
+  formatPaymentStatus,
+  isOrderCancellableByCustomer,
+  isOrderPayableOnline,
+} from '../../utils/orderStatus'
 import { getApiErrorMessage } from '../../utils/apiError'
-import type { OrderSummaryResponse } from '../../types/order/order'
+import type { OrderSummaryResponse, PaymentStatus } from '../../types/order/order'
 import type { PageResponse } from '../../types/common/pageResponse'
 import styles from './OrderListPage.module.css'
 
 const PAGE_SIZE = 10
+
+// Chưa thanh toán (PENDING) chỉ là bình thường (đang chờ), không nên đỏ như
+// FAILED thật sự — 4 màu riêng để không gây hoang mang không cần thiết.
+const PAYMENT_STATUS_STYLES: Record<PaymentStatus, string> = {
+  PENDING: styles.paymentStatusPending,
+  PAID: styles.paymentStatusPaid,
+  FAILED: styles.paymentStatusFailed,
+  CANCELLED: styles.paymentStatusCancelled,
+}
 
 // Danh sách đơn hàng của tôi (Gói 4.1) — GET /customer/orders không nhận
 // filter theo status (chỉ page/size/sort) nên không có bộ lọc trạng thái ở
@@ -108,7 +122,14 @@ function OrderListPage() {
                   <span className={styles.orderId}>#{order.id}</span>
                   <span className={styles.date}>{formatDate(order.createdAt)}</span>
                   <span className={styles.total}>{formatCurrency(order.totalAmount)}</span>
-                  <span className={styles.paymentMethod}>{formatPaymentMethod(order.paymentMethod)}</span>
+                  <span className={styles.paymentMethod}>
+                    {formatPaymentMethod(order.paymentMethod)}
+                    {order.paymentStatus && (
+                      <span className={PAYMENT_STATUS_STYLES[order.paymentStatus]}>
+                        {formatPaymentStatus(order.paymentStatus)}
+                      </span>
+                    )}
+                  </span>
                   <span>
                     <OrderStatusBadge status={order.status} />
                   </span>
@@ -116,7 +137,7 @@ function OrderListPage() {
                     <Link to={`/account/orders/${order.id}`} className={styles.detailLink}>
                       Xem chi tiết →
                     </Link>
-                    {isOrderPayableOnline(order.status, order.paymentMethod) && (
+                    {isOrderPayableOnline(order.paymentMethod, order.paymentStatus) && (
                       <button
                         type="button"
                         className={styles.rowPayButton}

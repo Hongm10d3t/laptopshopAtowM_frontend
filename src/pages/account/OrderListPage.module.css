@@ -96,8 +96,42 @@
 }
 
 .paymentMethod {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
   color: var(--color-text-muted);
   font-size: 0.82rem;
+}
+
+.paymentStatusPending,
+.paymentStatusPaid,
+.paymentStatusFailed,
+.paymentStatusCancelled {
+  font-size: 0.72rem;
+  font-weight: 600;
+  width: fit-content;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+}
+
+.paymentStatusPending {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.paymentStatusPaid {
+  color: var(--color-success);
+  background: #dcfce7;
+}
+
+.paymentStatusFailed {
+  color: var(--color-accent-red);
+  background: #fee2e2;
+}
+
+.paymentStatusCancelled {
+  color: var(--color-text-muted);
+  background: var(--color-bg-muted);
 }
 
 .actionsCell {

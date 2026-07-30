@@ -9,7 +9,13 @@ import { getPaymentUrl } from '../../services/payment/paymentService'
 import { createReview, getMyReview } from '../../services/review/reviewService'
 import { formatCurrency } from '../../utils/currency'
 import { formatDateTime } from '../../utils/date'
-import { formatPaymentMethod, isOrderCancellableByCustomer, isOrderPayableOnline } from '../../utils/orderStatus'
+import {
+  formatPaymentMethod,
+  formatPaymentStatus,
+  isOrderCancellableByCustomer,
+  isOrderPayableOnline,
+  isPaidAwaitingConfirmation,
+} from '../../utils/orderStatus'
 import { getApiErrorMessage } from '../../utils/apiError'
 import type { OrderResponse } from '../../types/order/order'
 import styles from './OrderDetailPage.module.css'
@@ -168,7 +174,8 @@ function OrderDetailPage() {
 
   const rawTotal = order.totalAmount + order.discountAmount
   const canCancel = isOrderCancellableByCustomer(order.status)
-  const canPayOnline = isOrderPayableOnline(order.status, order.paymentMethod)
+  const canPayOnline = isOrderPayableOnline(order.paymentMethod, order.paymentStatus)
+  const paidAwaitingConfirmation = isPaidAwaitingConfirmation(order.status, order.paymentMethod, order.paymentStatus)
   // Viết đánh giá và yêu cầu trả hàng cùng chung điều kiện DELIVERED — 2 biến
   // riêng để đọc code rõ ý nghĩa từng chỗ dùng, dù giá trị hiện giống nhau.
   const canRequestReturn = order.status === 'DELIVERED'
@@ -198,6 +205,13 @@ function OrderDetailPage() {
           </div>
         </div>
         <OrderStatusStepper status={order.status} />
+
+        {paidAwaitingConfirmation && (
+          <div className={styles.paidBanner}>
+            <span className={styles.paidBannerIcon}>✓</span>
+            Đã thanh toán — đơn đang chờ được xác nhận
+          </div>
+        )}
 
         {canPayOnline && (
           <div className={styles.payNowBlock}>
@@ -359,6 +373,14 @@ function OrderDetailPage() {
             <span>Phương thức thanh toán</span>
             <span>{formatPaymentMethod(order.paymentMethod)}</span>
           </div>
+          {order.paymentStatus && (
+            <div className={styles.summaryRow}>
+              <span>Trạng thái thanh toán</span>
+              <span className={order.paymentStatus === 'PAID' ? styles.paidText : undefined}>
+                {formatPaymentStatus(order.paymentStatus)}
+              </span>
+            </div>
+          )}
           <div className={styles.summaryRow}>
             <span>Tạm tính</span>
             <span>{formatCurrency(rawTotal)}</span>

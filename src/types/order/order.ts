@@ -14,6 +14,13 @@ export type OrderStatus =
 // Phase 5), ONLINE vẫn cho chọn vì Backend đã hỗ trợ tạo Payment PENDING.
 export type PaymentMethod = 'COD' | 'ONLINE'
 
+// Khớp PaymentStatus (backend/.../payment/entity/) — null trên OrderResponse/
+// OrderSummaryResponse nghĩa là đơn COD (không có Payment). Trạng thái thật
+// chỉ đổi qua /ipn (server-to-server), tách biệt hoàn toàn với OrderStatus
+// (Order chỉ chuyển PENDING -> CONFIRMED khi Admin xác nhận thủ công, dù
+// Payment đã PAID hay chưa).
+export type PaymentStatus = 'PENDING' | 'PAID' | 'FAILED' | 'CANCELLED'
+
 // Khớp CheckoutRequest (backend/.../order/dto/) — voucherCode/paymentMethod
 // optional, note tối đa 500 ký tự.
 export interface CheckoutRequest {
@@ -45,6 +52,7 @@ export interface OrderResponse {
   id: number
   status: OrderStatus
   paymentMethod: PaymentMethod
+  paymentStatus: PaymentStatus | null
   totalAmount: number
   discountAmount: number
   voucherCode: string | null
@@ -66,6 +74,7 @@ export interface OrderSummaryResponse {
   id: number
   status: OrderStatus
   paymentMethod: PaymentMethod
+  paymentStatus: PaymentStatus | null
   totalAmount: number
   createdAt: string
 }
