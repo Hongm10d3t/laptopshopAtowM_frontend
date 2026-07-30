@@ -46,10 +46,10 @@
 .tableHeader,
 .row {
   display: grid;
-  grid-template-columns: 90px 110px 140px 160px 140px 110px;
+  grid-template-columns: 90px 110px 140px 160px 140px 130px;
   gap: 1rem;
   align-items: center;
-  min-width: 700px;
+  min-width: 760px;
 }
 
 .tableHeader {
@@ -100,11 +100,37 @@
   font-size: 0.82rem;
 }
 
+.actionsCell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+
 .detailLink {
   color: var(--color-primary);
   font-weight: 600;
   font-size: 0.85rem;
   white-space: nowrap;
+}
+
+.rowCancelButton {
+  border: none;
+  background: none;
+  color: var(--color-accent-red);
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.rowCancelButton:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.rowCancelButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .pagination {

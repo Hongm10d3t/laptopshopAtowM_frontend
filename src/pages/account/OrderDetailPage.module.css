@@ -71,6 +71,117 @@
   color: var(--color-accent-red);
 }
 
+.actionsRow {
+  display: flex;
+  gap: 0.75rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: 1.25rem;
+}
+
+.cancelButton {
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--color-accent-red);
+  border-radius: 0.5rem;
+  background: var(--color-bg);
+  color: var(--color-accent-red);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background: var(--color-accent-red);
+  color: #fff;
+}
+
+.cancelButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.returnButton {
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--color-primary);
+  border-radius: 0.5rem;
+  background: var(--color-bg);
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.returnButton:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.actionError {
+  color: var(--color-accent-red);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.returnForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: 1.25rem;
+}
+
+.returnForm label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.returnForm textarea {
+  min-height: 90px;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  font-family: inherit;
+  font-size: 0.88rem;
+  resize: vertical;
+}
+
+.returnForm textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.returnFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.returnFormCancel {
+  padding: 0.55rem 1.1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.returnFormSubmit {
+  padding: 0.55rem 1.3rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.returnFormSubmit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .layout {
   display: flex;
   gap: 2rem;
@@ -106,14 +217,77 @@
 
 .item {
   display: flex;
-  align-items: center;
-  gap: 0.85rem;
+  flex-direction: column;
+  gap: 0.6rem;
   padding: 0.85rem 0;
   border-bottom: 1px solid var(--color-border);
 }
 
 .item:last-child {
   border-bottom: none;
+}
+
+.itemRow {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.itemReviewAction {
+  padding-left: 62px;
+}
+
+.writeReviewButton {
+  border: 1px solid var(--color-primary);
+  background: none;
+  color: var(--color-primary);
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.writeReviewButton:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.reviewedBadge {
+  color: var(--color-success);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.reviewForm {
+  margin-left: 62px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background: var(--color-bg-muted);
+  border-radius: 0.6rem;
+  padding: 1rem;
+}
+
+.reviewForm textarea {
+  min-height: 80px;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  font-family: inherit;
+  font-size: 0.88rem;
+  resize: vertical;
+}
+
+.reviewForm textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.reviewFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
 }
 
 .productIcon {

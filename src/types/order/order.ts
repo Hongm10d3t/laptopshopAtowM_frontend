@@ -23,10 +23,14 @@ export interface CheckoutRequest {
   paymentMethod?: PaymentMethod
 }
 
-// Khớp OrderItemResponse.
+// Khớp OrderItemResponse. productId/productSlug resolve sống từ
+// productVariantId (không phải snapshot) — có thể null nếu không resolve
+// được (thực tế không xảy ra, xem comment phía Backend).
 export interface OrderItemResponse {
   id: number
   productVariantId: number
+  productId: number | null
+  productSlug: string | null
   productName: string
   variantName: string
   sku: string

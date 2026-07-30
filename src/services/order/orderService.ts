@@ -34,3 +34,11 @@ export async function getOrder(id: number): Promise<OrderResponse> {
   const response = await apiClient.get<ApiResponse<OrderResponse>>(`/customer/orders/${id}`)
   return response.data.data
 }
+
+// POST /customer/orders/{id}/cancel — Backend tự chặn nếu status không còn
+// PENDING/CONFIRMED (OrderService.cancelByCustomer), FE chỉ ẩn nút theo cùng
+// điều kiện để tránh gọi API rồi mới báo lỗi ở tình huống bình thường.
+export async function cancelOrder(id: number): Promise<OrderResponse> {
+  const response = await apiClient.post<ApiResponse<OrderResponse>>(`/customer/orders/${id}/cancel`)
+  return response.data.data
+}

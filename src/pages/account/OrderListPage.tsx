@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import OrderStatusBadge from '../../components/order/OrderStatusBadge'
-import { listOrders } from '../../services/order/orderService'
+import { cancelOrder, listOrders } from '../../services/order/orderService'
 import { formatCurrency } from '../../utils/currency'
 import { formatDate } from '../../utils/date'
-import { formatPaymentMethod } from '../../utils/orderStatus'
+import { formatPaymentMethod, isOrderCancellableByCustomer } from '../../utils/orderStatus'
 import { getApiErrorMessage } from '../../utils/apiError'
 import type { OrderSummaryResponse } from '../../types/order/order'
 import type { PageResponse } from '../../types/common/pageResponse'
@@ -14,15 +14,17 @@ const PAGE_SIZE = 10
 
 // Danh sách đơn hàng của tôi (Gói 4.1) — GET /customer/orders không nhận
 // filter theo status (chỉ page/size/sort) nên không có bộ lọc trạng thái ở
-// đây, tránh dựng UI filter không hoạt động thật.
+// đây, tránh dựng UI filter không hoạt động thật. Gói 4.2 thêm nút hủy nhanh
+// ngay trong danh sách, không bắt phải vào chi tiết đơn mới hủy được.
 function OrderListPage() {
   const [pageInfo, setPageInfo] = useState<Omit<PageResponse<OrderSummaryResponse>, 'content'> | null>(null)
   const [orders, setOrders] = useState<OrderSummaryResponse[]>([])
   const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [cancellingOrderId, setCancellingOrderId] = useState<number | null>(null)
 
-  useEffect(() => {
+  function loadOrders() {
     setIsLoading(true)
     setError(null)
     listOrders({ page: page - 1, size: PAGE_SIZE })
@@ -32,7 +34,26 @@ function OrderListPage() {
       })
       .catch((err: unknown) => setError(getApiErrorMessage(err)))
       .finally(() => setIsLoading(false))
+  }
+
+  useEffect(() => {
+    loadOrders()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page])
+
+  async function handleCancelOrder(orderId: number) {
+    if (!window.confirm(`Xác nhận hủy đơn hàng #${orderId}?`)) return
+    setCancellingOrderId(orderId)
+    setError(null)
+    try {
+      await cancelOrder(orderId)
+      loadOrders()
+    } catch (err) {
+      setError(getApiErrorMessage(err, 'Không thể hủy đơn hàng'))
+    } finally {
+      setCancellingOrderId(null)
+    }
+  }
 
   return (
     <section>
@@ -61,7 +82,7 @@ function OrderListPage() {
               <span className={styles.colRight}>Tổng tiền</span>
               <span>Thanh toán</span>
               <span>Trạng thái</span>
-              <span />
+              <span>Thao tác</span>
             </div>
 
             <ul className={styles.rowList}>
@@ -74,9 +95,21 @@ function OrderListPage() {
                   <span>
                     <OrderStatusBadge status={order.status} />
                   </span>
-                  <Link to={`/account/orders/${order.id}`} className={styles.detailLink}>
-                    Xem chi tiết →
-                  </Link>
+                  <div className={styles.actionsCell}>
+                    <Link to={`/account/orders/${order.id}`} className={styles.detailLink}>
+                      Xem chi tiết →
+                    </Link>
+                    {isOrderCancellableByCustomer(order.status) && (
+                      <button
+                        type="button"
+                        className={styles.rowCancelButton}
+                        disabled={cancellingOrderId === order.id}
+                        onClick={() => handleCancelOrder(order.id)}
+                      >
+                        {cancellingOrderId === order.id ? 'Đang hủy...' : 'Hủy đơn'}
+                      </button>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>

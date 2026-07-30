@@ -1,0 +1,33 @@
+.stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.starFilled,
+.starEmpty {
+  border: none;
+  background: none;
+  padding: 0.15rem;
+  cursor: pointer;
+}
+
+.starFilled svg,
+.starEmpty svg {
+  width: 26px;
+  height: 26px;
+}
+
+.starFilled {
+  color: #f59e0b;
+}
+
+.starEmpty {
+  color: var(--color-border);
+}
+
+.starFilled:disabled,
+.starEmpty:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

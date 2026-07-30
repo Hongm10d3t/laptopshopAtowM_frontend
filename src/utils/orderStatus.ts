@@ -25,3 +25,11 @@ const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
 export function formatPaymentMethod(method: PaymentMethod): string {
   return PAYMENT_METHOD_LABELS[method]
 }
+
+// Khớp OrderService.cancelByCustomer — Customer chỉ tự hủy được khi đơn chưa
+// bắt đầu chuẩn bị (PENDING/CONFIRMED), hẹp hơn năng lực Admin
+// (Order.isCancellable cho phép cả PREPARING). Dùng chung ở OrderListPage
+// (nút hủy nhanh) và OrderDetailPage.
+export function isOrderCancellableByCustomer(status: OrderStatus): boolean {
+  return status === 'PENDING' || status === 'CONFIRMED'
+}
