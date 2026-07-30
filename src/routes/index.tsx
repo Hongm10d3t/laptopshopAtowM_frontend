@@ -3,6 +3,7 @@ import MainLayout from '../components/layout/MainLayout'
 import AuthGuard from '../guard/AuthGuard'
 import HomePage from '../pages/HomePage'
 import ProductListPage from '../pages/catalog/ProductListPage'
+import ProductDetailPage from '../pages/catalog/ProductDetailPage'
 import LoginPage from '../pages/auth/LoginPage'
 import RegisterPage from '../pages/auth/RegisterPage'
 import VerifyEmailPage from '../pages/auth/VerifyEmailPage'
@@ -21,6 +22,7 @@ function AppRoutes() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/products" element={<ProductListPage />} />
+        <Route path="/products/:slug" element={<ProductDetailPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
