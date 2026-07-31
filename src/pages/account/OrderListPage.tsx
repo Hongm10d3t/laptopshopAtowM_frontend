@@ -83,6 +83,10 @@ function OrderListPage() {
     } catch (err) {
       setError(getApiErrorMessage(err, 'Không thể tạo giao dịch thanh toán'))
       setPayingOrderId(null)
+      // Lỗi phổ biến nhất ở đây là "đã thanh toán rồi" (danh sách đang mở bị
+      // cũ so với trạng thái thật) — tải lại ngay để nút/badge tự cập nhật
+      // đúng, không để nút "Thanh toán ngay" đứng yên gây hiểu nhầm tiếp.
+      loadOrders()
     }
   }
 

@@ -118,6 +118,11 @@ function OrderDetailPage() {
     } catch (err) {
       setPayError(getApiErrorMessage(err, 'Không thể tạo giao dịch thanh toán'))
       setIsPaying(false)
+      // Lỗi phổ biến nhất ở đây là "đã thanh toán rồi" (trang đang mở bị cũ so
+      // với trạng thái thật, vd thanh toán xong ở tab khác chưa quay lại) —
+      // tải lại đơn ngay để nút/badge tự cập nhật đúng, không chỉ báo lỗi suông
+      // rồi để nút "Thanh toán ngay" đứng yên gây hiểu nhầm tiếp.
+      loadOrder(order.id)
     }
   }
 
