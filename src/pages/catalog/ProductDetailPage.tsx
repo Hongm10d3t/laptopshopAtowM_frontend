@@ -42,7 +42,7 @@ function ProductDetailPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const compareItems = useAppSelector((state) => state.compare.items)
-  const accessToken = useAppSelector((state) => state.auth.accessToken)
+  const { accessToken, role } = useAppSelector((state) => state.auth)
 
   const [product, setProduct] = useState<ProductDetailResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -164,6 +164,10 @@ function ProductDetailPage() {
     if (!selectedVariant) return
     if (!accessToken) {
       navigate('/login', { state: { from: location } })
+      return
+    }
+    if (role !== 'CUSTOMER') {
+      setAddToCartError('Tài khoản quản trị không thể mua hàng. Vui lòng dùng tài khoản khách hàng.')
       return
     }
     setIsAddingToCart(true)

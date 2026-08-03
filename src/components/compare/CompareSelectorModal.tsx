@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { addCompareItem, closeCompareSelector, removeCompareItem, clearCompareItems } from '../../redux/slices/compareSlice'
+import { addCompareItem, clearCompareItems, closeCompareSelector, removeCompareItem } from '../../redux/slices/compareSlice'
 import { getActiveCategories } from '../../services/catalog/categoryService'
 import { getProductBySlug, searchProducts } from '../../services/catalog/productService'
-import { formatPriceRange } from '../../utils/currency'
-import { getApiErrorMessage } from '../../utils/apiError'
 import type { CategoryPublicResponse } from '../../types/catalog/category'
-import type { ProductListItemResponse } from '../../types/catalog/product'
+import type { ProductDetailResponse, ProductListItemResponse, ProductVariantResponse } from '../../types/catalog/product'
+import { getApiErrorMessage } from '../../utils/apiError'
+import { formatCurrency, formatPriceRange } from '../../utils/currency'
 import styles from './CompareSelectorModal.module.css'
 
 const MAX_ITEMS = 3
@@ -23,15 +23,10 @@ const SEARCH_ICON = (
   </svg>
 )
 
-// Modal chọn sản phẩm so sánh (tham khảo FPT Shop) — thay vì bắt người dùng
-// quay lại từng trang chi tiết sản phẩm để bấm "Thêm vào so sánh", modal này
-// gợi ý sẵn các sản phẩm cùng danh mục (+ tìm kiếm) ngay tại chỗ. Mount 1 lần
-// ở MainLayout, mọi nơi chỉ cần dispatch(openCompareSelector()).
-//
-// ProductListItemResponse không có variantId (chỉ priceFrom/priceTo gộp từ
-// nhiều variant) — khi bấm "Thêm", phải gọi thêm GET /public/products/{slug}
-// để lấy variant đầu tiên (ACTIVE) làm variant đại diện, giống cách
-// ProductDetailPage đã làm với variant đang chọn.
+function getVariantLabel(variant: ProductVariantResponse) {
+  return variant.variantName?.trim() || variant.sku
+}
+
 function CompareSelectorModal() {
   const isOpen = useAppSelector((state) => state.compare.isSelectorOpen)
   const items = useAppSelector((state) => state.compare.items)
@@ -43,7 +38,10 @@ function CompareSelectorModal() {
   const [keyword, setKeyword] = useState('')
   const [suggestions, setSuggestions] = useState<ProductListItemResponse[]>([])
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false)
-  const [addingProductId, setAddingProductId] = useState<number | null>(null)
+  const [loadingProductId, setLoadingProductId] = useState<number | null>(null)
+  const [detailsByProductId, setDetailsByProductId] = useState<Record<number, ProductDetailResponse>>({})
+  const [expandedProductId, setExpandedProductId] = useState<number | null>(null)
+  const [selectedVariantId, setSelectedVariantId] = useState<number | null>(null)
 
   useEffect(() => {
     getActiveCategories()
@@ -51,31 +49,68 @@ function CompareSelectorModal() {
       .catch(() => setCategories([]))
   }, [])
 
-  // Đã có sản phẩm trong danh sách -> khóa cứng gợi ý vào đúng danh mục của
-  // sản phẩm đó (Backend chỉ cho so sánh cùng danh mục), không cho chọn danh
-  // mục khác nữa — người dùng không cần tự tìm "đúng danh mục", hệ thống lo
-  // sẵn. Chỉ khi danh sách rỗng mới cho chọn danh mục tự do để bắt đầu.
   const isLockedToCategory = items.length > 0
   const referenceCategory = categories.find((category) => category.name === items[0]?.categoryName)
-  // Đang khóa nhưng chưa xác định được category (categories chưa tải xong) —
-  // đợi thay vì tạm hiện gợi ý sai danh mục.
   const isResolvingLockedCategory = isLockedToCategory && !referenceCategory
   const activeCategoryId = isLockedToCategory ? referenceCategory?.id : (manualCategoryId ?? 'all')
   const searchCategoryId = activeCategoryId === 'all' || activeCategoryId === undefined ? undefined : activeCategoryId
 
   useEffect(() => {
     if (!isOpen || isResolvingLockedCategory) return
+
     setIsLoadingSuggestions(true)
-    const timer = setTimeout(() => {
-      searchProducts({ categoryId: searchCategoryId, keyword: keyword.trim() || undefined, size: SUGGESTION_SIZE })
+    const timer = window.setTimeout(() => {
+      searchProducts({
+        categoryId: searchCategoryId,
+        keyword: keyword.trim() || undefined,
+        size: SUGGESTION_SIZE,
+      })
         .then((result) => setSuggestions(result.content))
         .catch(() => setSuggestions([]))
         .finally(() => setIsLoadingSuggestions(false))
     }, SEARCH_DEBOUNCE_MS)
-    return () => clearTimeout(timer)
+
+    return () => window.clearTimeout(timer)
   }, [isOpen, isResolvingLockedCategory, searchCategoryId, keyword])
 
   if (!isOpen) return null
+
+  function validateBeforeAdd(product: ProductListItemResponse) {
+    if (items.length >= MAX_ITEMS) {
+      window.alert(`Chỉ có thể so sánh tối đa ${MAX_ITEMS} sản phẩm. Vui lòng bỏ bớt trước khi thêm mới.`)
+      return false
+    }
+
+    const conflictingItem = items.find((item) => item.categoryName !== product.categoryName)
+    if (conflictingItem) {
+      window.alert(`Chỉ so sánh được các sản phẩm cùng danh mục "${conflictingItem.categoryName}".`)
+      return false
+    }
+
+    return true
+  }
+
+  function addVariant(product: ProductListItemResponse, detail: ProductDetailResponse, variantId: number) {
+    const variant = detail.variants.find((item) => item.id === variantId)
+    if (!variant) {
+      window.alert('Phiên bản đã chọn không còn khả dụng.')
+      return
+    }
+
+    dispatch(
+      addCompareItem({
+        variantId: variant.id,
+        productId: detail.id,
+        productSlug: detail.slug,
+        productName: detail.name,
+        variantName: getVariantLabel(variant),
+        categoryName: detail.categoryName,
+        thumbnailUrl: detail.images[0]?.url ?? product.thumbnailUrl,
+      }),
+    )
+    setExpandedProductId(null)
+    setSelectedVariantId(null)
+  }
 
   async function handleToggleProduct(product: ProductListItemResponse) {
     const existingItem = items.find((item) => item.productId === product.id)
@@ -83,42 +118,53 @@ function CompareSelectorModal() {
       dispatch(removeCompareItem(existingItem.variantId))
       return
     }
-    if (items.length >= MAX_ITEMS) {
-      window.alert(`Chỉ có thể so sánh tối đa ${MAX_ITEMS} sản phẩm. Vui lòng bỏ bớt trước khi thêm mới.`)
+
+    if (!validateBeforeAdd(product)) return
+
+    const cachedDetail = detailsByProductId[product.id]
+    if (cachedDetail) {
+      if (cachedDetail.variants.length === 1) {
+        addVariant(product, cachedDetail, cachedDetail.variants[0].id)
+      } else {
+        setExpandedProductId(product.id)
+        setSelectedVariantId(cachedDetail.variants[0]?.id ?? null)
+      }
       return
     }
-    const conflictingItem = items.find((item) => item.categoryName !== product.categoryName)
-    if (conflictingItem) {
-      window.alert(`Chỉ so sánh được các sản phẩm cùng danh mục "${conflictingItem.categoryName}".`)
-      return
-    }
-    setAddingProductId(product.id)
+
+    setLoadingProductId(product.id)
     try {
       const detail = await getProductBySlug(product.slug)
-      const variant = detail.variants[0]
-      if (!variant) {
+      setDetailsByProductId((current) => ({ ...current, [product.id]: detail }))
+
+      if (detail.variants.length === 0) {
         window.alert('Sản phẩm này hiện không có phiên bản khả dụng để so sánh.')
         return
       }
-      dispatch(
-        addCompareItem({
-          variantId: variant.id,
-          productId: detail.id,
-          productSlug: detail.slug,
-          productName: detail.name,
-          variantName: variant.variantName,
-          categoryName: detail.categoryName,
-          thumbnailUrl: detail.images[0]?.url ?? null,
-        }),
-      )
+
+      if (detail.variants.length === 1) {
+        addVariant(product, detail, detail.variants[0].id)
+        return
+      }
+
+      setExpandedProductId(product.id)
+      setSelectedVariantId(detail.variants[0].id)
     } catch (err) {
-      window.alert(getApiErrorMessage(err, 'Không thể thêm sản phẩm này vào so sánh'))
+      window.alert(getApiErrorMessage(err, 'Không thể tải cấu hình của sản phẩm này'))
     } finally {
-      setAddingProductId(null)
+      setLoadingProductId(null)
     }
   }
 
+  function handleConfirmVariant(product: ProductListItemResponse) {
+    const detail = detailsByProductId[product.id]
+    if (!detail || selectedVariantId == null) return
+    addVariant(product, detail, selectedVariantId)
+  }
+
   function handleClose() {
+    setExpandedProductId(null)
+    setSelectedVariantId(null)
     dispatch(closeCompareSelector())
   }
 
@@ -186,26 +232,63 @@ function CompareSelectorModal() {
             <ul className={styles.productList}>
               {suggestions.map((product) => {
                 const isAdded = items.some((item) => item.productId === product.id)
-                const isAdding = addingProductId === product.id
+                const isLoading = loadingProductId === product.id
+                const detail = detailsByProductId[product.id]
+                const isChoosingVariant = expandedProductId === product.id && !isAdded && detail != null
+
                 return (
-                  <li key={product.id} className={styles.productRow}>
-                    {product.thumbnailUrl ? (
-                      <img src={product.thumbnailUrl} alt={product.name} className={styles.productImage} />
-                    ) : (
-                      <div className={styles.productImagePlaceholder}>{product.name}</div>
-                    )}
-                    <div className={styles.productInfo}>
-                      <p className={styles.productPrice}>{formatPriceRange(product.priceFrom, product.priceTo)}</p>
-                      <p className={styles.productName}>{product.name}</p>
+                  <li key={product.id} className={styles.productCard}>
+                    <div className={styles.productRow}>
+                      {product.thumbnailUrl ? (
+                        <img src={product.thumbnailUrl} alt={product.name} className={styles.productImage} />
+                      ) : (
+                        <div className={styles.productImagePlaceholder}>{product.name}</div>
+                      )}
+                      <div className={styles.productInfo}>
+                        <p className={styles.productPrice}>{formatPriceRange(product.priceFrom, product.priceTo)}</p>
+                        <p className={styles.productName}>{product.name}</p>
+                      </div>
+                      <button
+                        type="button"
+                        className={isAdded ? styles.addedButton : styles.addButton}
+                        disabled={isLoading}
+                        onClick={() => handleToggleProduct(product)}
+                      >
+                        {isAdded
+                          ? '✓ Đã thêm vào so sánh'
+                          : isLoading
+                            ? 'Đang tải cấu hình...'
+                            : isChoosingVariant
+                              ? 'Đang chọn cấu hình'
+                              : '+ Thêm vào so sánh'}
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      className={isAdded ? styles.addedButton : styles.addButton}
-                      disabled={isAdding}
-                      onClick={() => handleToggleProduct(product)}
-                    >
-                      {isAdded ? '✓ Đã thêm vào so sánh' : isAdding ? 'Đang thêm...' : '+ Thêm vào so sánh'}
-                    </button>
+
+                    {isChoosingVariant && (
+                      <div className={styles.variantPicker}>
+                        <label className={styles.variantField}>
+                          <span>Chọn cấu hình cần so sánh</span>
+                          <select
+                            value={selectedVariantId ?? ''}
+                            onChange={(event) => setSelectedVariantId(Number(event.target.value))}
+                          >
+                            {detail.variants.map((variant) => (
+                              <option key={variant.id} value={variant.id}>
+                                {getVariantLabel(variant)} — {formatCurrency(variant.price)}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <button
+                          type="button"
+                          className={styles.confirmVariantButton}
+                          disabled={selectedVariantId == null}
+                          onClick={() => handleConfirmVariant(product)}
+                        >
+                          Thêm cấu hình này
+                        </button>
+                      </div>
+                    )}
                   </li>
                 )
               })}
@@ -223,7 +306,9 @@ function CompareSelectorModal() {
                   ) : (
                     <span className={styles.slotImagePlaceholder}>{item.productName.charAt(0)}</span>
                   )}
-                  <span className={styles.slotName}>{item.productName}</span>
+                  <span className={styles.slotName} title={`${item.productName} - ${item.variantName}`}>
+                    {item.productName}
+                  </span>
                   <button
                     type="button"
                     className={styles.slotRemove}

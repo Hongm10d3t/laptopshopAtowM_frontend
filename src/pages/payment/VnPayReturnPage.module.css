@@ -15,7 +15,8 @@
 }
 
 .iconSuccess,
-.iconError {
+.iconError,
+.iconPending {
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -33,6 +34,10 @@
 
 .iconError {
   background: var(--color-accent-red);
+}
+
+.iconPending {
+  background: var(--color-warning);
 }
 
 .page h1 {

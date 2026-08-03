@@ -52,17 +52,20 @@ function AppRoutes() {
         <Route path="/payment/vnpay-return" element={<VnPayReturnPage />} />
 
         <Route element={<AuthGuard />}>
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/account" element={<AccountLayout />}>
-            <Route index element={<ProfilePage />} />
-            <Route path="profile" element={<ProfilePage />} />
-            <Route path="orders" element={<OrderListPage />} />
-            <Route path="orders/:id" element={<OrderDetailPage />} />
-            <Route path="addresses" element={<AddressListPage />} />
-            <Route path="addresses/new" element={<AddressFormPage />} />
-            <Route path="addresses/:id/edit" element={<AddressFormPage />} />
-            <Route path="change-password" element={<ChangePasswordPage />} />
+          <Route element={<RoleGuard allowedRoles={['CUSTOMER']} />}>
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+
+            <Route path="/account" element={<AccountLayout />}>
+              <Route index element={<ProfilePage />} />
+              <Route path="profile" element={<ProfilePage />} />
+              <Route path="orders" element={<OrderListPage />} />
+              <Route path="orders/:id" element={<OrderDetailPage />} />
+              <Route path="addresses" element={<AddressListPage />} />
+              <Route path="addresses/new" element={<AddressFormPage />} />
+              <Route path="addresses/:id/edit" element={<AddressFormPage />} />
+              <Route path="change-password" element={<ChangePasswordPage />} />
+            </Route>
           </Route>
         </Route>
       </Route>

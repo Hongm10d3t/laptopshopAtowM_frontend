@@ -44,25 +44,25 @@ const CART_ICON = (
   </svg>
 )
 
-// Giỏ hàng nối vào cartSlice thật từ Gói 3.1. Trạng thái đăng nhập ở đây đã
-// là thật (authSlice, Gói 1.3).
 function Header() {
-  const { accessToken, email } = useAppSelector((state) => state.auth)
+  const { accessToken, email, role } = useAppSelector((state) => state.auth)
   const cartQuantity = useAppSelector((state) => state.cart.items.reduce((sum, item) => sum + item.quantity, 0))
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [keyword, setKeyword] = useState('')
 
-  // Nạp giỏ hàng thật khi vừa đăng nhập/khôi phục phiên (accessToken xuất
-  // hiện) để badge đúng ngay từ đầu, không đợi tới lúc vào hẳn trang giỏ
-  // hàng; xoá cartSlice khi đăng xuất để không hiện nhầm giỏ của người trước.
+  const isAdmin = role === 'ADMIN'
+  const isCustomer = role === 'CUSTOMER'
+
+  // Chỉ CUSTOMER có giỏ hàng ở Backend. ADMIN không được gọi /customer/cart
+  // và không giữ badge giỏ hàng cũ khi đổi phiên đăng nhập.
   useEffect(() => {
-    if (accessToken) {
-      getCart().catch(() => {})
+    if (accessToken && isCustomer) {
+      getCart().catch(() => dispatch(clearCartState()))
     } else {
       dispatch(clearCartState())
     }
-  }, [accessToken, dispatch])
+  }, [accessToken, dispatch, isCustomer])
 
   function handleSearchSubmit(event: FormEvent) {
     event.preventDefault()
@@ -70,12 +70,8 @@ function Header() {
     navigate(trimmed ? `/products?keyword=${encodeURIComponent(trimmed)}` : '/products')
   }
 
-  // window.confirm — đủ dùng cho 1 xác nhận đơn giản, chưa cần dựng hệ thống
-  // modal riêng chỉ vì 1 chỗ dùng.
   async function handleLogout() {
-    if (!window.confirm('Bạn có chắc muốn đăng xuất?')) {
-      return
-    }
+    if (!window.confirm('Bạn có chắc muốn đăng xuất?')) return
     await logout()
     navigate('/')
   }
@@ -107,20 +103,31 @@ function Header() {
         </form>
 
         <div className={styles.actions}>
-          <Link to="/account/orders" className={styles.actionItem}>
-            <span className={styles.actionIcon}>{ORDER_ICON}</span>
-            <span className={styles.actionText}>
-              <span className={styles.actionLabel}>Đơn hàng</span>
-              <span className={styles.actionSub}>Theo dõi đơn</span>
-            </span>
-          </Link>
+          {isAdmin ? (
+            <Link to="/admin" className={styles.actionItem}>
+              <span className={styles.actionIcon}>{ORDER_ICON}</span>
+              <span className={styles.actionText}>
+                <span className={styles.actionLabel}>Quản trị</span>
+                <span className={styles.actionSub}>Mở trang admin</span>
+              </span>
+            </Link>
+          ) : (
+            <Link to="/account/orders" className={styles.actionItem}>
+              <span className={styles.actionIcon}>{ORDER_ICON}</span>
+              <span className={styles.actionText}>
+                <span className={styles.actionLabel}>Đơn hàng</span>
+                <span className={styles.actionSub}>Theo dõi đơn</span>
+              </span>
+            </Link>
+          )}
+
           {accessToken ? (
             <div className={styles.accountMenu}>
-              <Link to="/account/profile" className={styles.actionItem}>
+              <Link to={isAdmin ? '/admin' : '/account/profile'} className={styles.actionItem}>
                 <span className={styles.actionIcon}>{USER_ICON}</span>
                 <span className={styles.actionText}>
                   <span className={styles.actionLabel}>{email}</span>
-                  <span className={styles.actionSub}>Tài khoản</span>
+                  <span className={styles.actionSub}>{isAdmin ? 'Quản trị viên' : 'Tài khoản'}</span>
                 </span>
               </Link>
               <button type="button" className={styles.logoutButton} onClick={handleLogout}>
@@ -136,16 +143,19 @@ function Header() {
               </span>
             </Link>
           )}
-          <Link to="/cart" className={styles.actionItem}>
-            <span className={styles.actionIcon}>
-              {CART_ICON}
-              {cartQuantity > 0 && <span className={styles.cartBadge}>{cartQuantity}</span>}
-            </span>
-            <span className={styles.actionText}>
-              <span className={styles.actionLabel}>Giỏ hàng</span>
-              <span className={styles.actionSub}>Xem giỏ</span>
-            </span>
-          </Link>
+
+          {!isAdmin && (
+            <Link to="/cart" className={styles.actionItem}>
+              <span className={styles.actionIcon}>
+                {CART_ICON}
+                {cartQuantity > 0 && <span className={styles.cartBadge}>{cartQuantity}</span>}
+              </span>
+              <span className={styles.actionText}>
+                <span className={styles.actionLabel}>Giỏ hàng</span>
+                <span className={styles.actionSub}>Xem giỏ</span>
+              </span>
+            </Link>
+          )}
         </div>
       </div>
       <CategoryNav />
