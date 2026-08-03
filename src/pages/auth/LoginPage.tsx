@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { login } from '../../services/auth/authService'
+import { store } from '../../redux/store'
 import { getApiErrorCode, getApiErrorMessage } from '../../utils/apiError'
 import styles from './LoginPage.module.css'
 
@@ -48,7 +49,12 @@ function LoginPage() {
     setIsSubmitting(true)
     try {
       await login({ email: form.email.trim(), password: form.password })
-      navigate(from, { replace: true })
+      // ADMIN chưa từng bị điều hướng vào /login từ 1 trang cụ thể nào (chưa
+      // có route Admin nào bị AuthGuard chặn để set state.from) nên "from"
+      // luôn là "/" mặc định — đẩy thẳng sang /admin cho tiện, khác Customer
+      // vẫn về đúng "/" hoặc trang họ định vào trước đó.
+      const role = store.getState().auth.role
+      navigate(role === 'ADMIN' && from === '/' ? '/admin' : from, { replace: true })
     } catch (err) {
       setError(getApiErrorMessage(err))
       setIsNotVerified(getApiErrorCode(err) === 'ACCOUNT_NOT_VERIFIED')

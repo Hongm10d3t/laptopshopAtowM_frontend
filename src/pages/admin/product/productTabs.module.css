@@ -1,0 +1,199 @@
+/* Style dùng chung cho 3 tab con của ProductDetailPage (Variant/Ảnh/Thông số
+   kỹ thuật) — bảng gọn, form thêm-nhanh dạng inline, không cần trang riêng. */
+.tabHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.tabHeader h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.addButton {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.addForm {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+  background: var(--color-bg-muted);
+  border-radius: 0.6rem;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+  align-items: end;
+}
+
+.addForm label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.addForm input {
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.45rem;
+  font-size: 0.88rem;
+  font-family: inherit;
+}
+
+.addForm input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.addFormActions {
+  display: flex;
+  gap: 0.6rem;
+  grid-column: 1 / -1;
+}
+
+.inlineInput {
+  width: 100%;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+
+.inlineInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.imageCard {
+  border: 1px solid var(--color-border);
+  border-radius: 0.6rem;
+  overflow: hidden;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.imageThumb {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  background: var(--color-bg-muted);
+  display: block;
+}
+
+.imageCardBody {
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.imageAlt {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.imageActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.reorderButtons {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.reorderButtons button {
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  border-radius: 0.35rem;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.reorderButtons button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.specGroup {
+  margin-bottom: 1.5rem;
+}
+
+.specGroup:last-child {
+  margin-bottom: 0;
+}
+
+.specGroupTitle {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0 0 0.65rem;
+}
+
+.specRow {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.specLabel {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.specUnit {
+  font-weight: 400;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+.specRow input {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.45rem;
+  font-size: 0.88rem;
+  font-family: inherit;
+}
+
+.specRow input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+@media (max-width: 640px) {
+  .specRow {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+}

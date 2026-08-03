@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import MainLayout from '../components/layout/MainLayout'
 import AuthGuard from '../guard/AuthGuard'
+import RoleGuard from '../guard/RoleGuard'
 import HomePage from '../pages/HomePage'
 import ProductListPage from '../pages/catalog/ProductListPage'
 import ProductDetailPage from '../pages/catalog/ProductDetailPage'
@@ -18,10 +19,25 @@ import OrderDetailPage from '../pages/account/OrderDetailPage'
 import CartPage from '../pages/cart/CartPage'
 import CheckoutPage from '../pages/checkout/CheckoutPage'
 import VnPayReturnPage from '../pages/payment/VnPayReturnPage'
+import AdminLayout from '../pages/admin/AdminLayout'
+import CategoryListPage from '../pages/admin/category/CategoryListPage'
+import CategoryFormPage from '../pages/admin/category/CategoryFormPage'
+import BrandListPage from '../pages/admin/brand/BrandListPage'
+import BrandFormPage from '../pages/admin/brand/BrandFormPage'
+import AdminProductListPage from '../pages/admin/product/ProductListPage'
+import AdminProductFormPage from '../pages/admin/product/ProductFormPage'
+import AdminProductDetailPage from '../pages/admin/product/ProductDetailPage'
+import StockReceiptListPage from '../pages/admin/inventory/StockReceiptListPage'
+import StockReceiptFormPage from '../pages/admin/inventory/StockReceiptFormPage'
+import StockReceiptDetailPage from '../pages/admin/inventory/StockReceiptDetailPage'
+import VariantInventoryPage from '../pages/admin/inventory/VariantInventoryPage'
 
 // Route config tập trung tại đây. MainLayout bọc mọi route Storefront (Guest/
-// Customer) — Admin sẽ có layout riêng, thêm route "/admin/**" ở Phase 6-9.
-// RoleGuard (folder guard/) chưa có route nào dùng — áp dụng khi tới /admin/**.
+// Customer). Admin có layout riêng (AdminLayout, Phase 6) — KHÔNG lồng trong
+// MainLayout vì Admin không dùng Header/TopBar/CategoryNav/Footer storefront.
+// /admin/** đòi hỏi AuthGuard (đã đăng nhập) RỒI MỚI TỚI RoleGuard (đúng role
+// ADMIN) — sai thứ tự sẽ đá thẳng người chưa đăng nhập về "/" thay vì
+// "/login" kèm state.from.
 function AppRoutes() {
   return (
     <Routes>
@@ -47,6 +63,27 @@ function AppRoutes() {
             <Route path="addresses/new" element={<AddressFormPage />} />
             <Route path="addresses/:id/edit" element={<AddressFormPage />} />
             <Route path="change-password" element={<ChangePasswordPage />} />
+          </Route>
+        </Route>
+      </Route>
+
+      <Route element={<AuthGuard />}>
+        <Route element={<RoleGuard allowedRoles={['ADMIN']} />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<CategoryListPage />} />
+            <Route path="categories" element={<CategoryListPage />} />
+            <Route path="categories/new" element={<CategoryFormPage />} />
+            <Route path="categories/:id/edit" element={<CategoryFormPage />} />
+            <Route path="brands" element={<BrandListPage />} />
+            <Route path="brands/new" element={<BrandFormPage />} />
+            <Route path="brands/:id/edit" element={<BrandFormPage />} />
+            <Route path="products" element={<AdminProductListPage />} />
+            <Route path="products/new" element={<AdminProductFormPage />} />
+            <Route path="products/:id" element={<AdminProductDetailPage />} />
+            <Route path="inventory/receipts" element={<StockReceiptListPage />} />
+            <Route path="inventory/receipts/new" element={<StockReceiptFormPage />} />
+            <Route path="inventory/receipts/:id" element={<StockReceiptDetailPage />} />
+            <Route path="inventory/variants/:variantId" element={<VariantInventoryPage />} />
           </Route>
         </Route>
       </Route>
