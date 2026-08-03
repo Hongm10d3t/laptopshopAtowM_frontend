@@ -1,0 +1,349 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-text-muted);
+  font-size: 0.83rem;
+}
+
+.breadcrumb a:hover {
+  color: var(--color-primary);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.titleRow h1 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1.45rem;
+}
+
+.header p {
+  margin: 0.4rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  gap: 1.1rem;
+  align-items: start;
+}
+
+.mainColumn,
+.sideColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.sideColumn {
+  position: sticky;
+  top: 1.25rem;
+}
+
+.card {
+  border: 1px solid var(--color-border);
+  border-radius: 0.8rem;
+  background: var(--color-bg);
+  padding: 1.1rem;
+}
+
+.card h2 {
+  margin: 0 0 1rem;
+  color: var(--color-text);
+  font-size: 0.98rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.cardHeader h2 {
+  margin: 0;
+}
+
+.cardHeader span {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.itemTableWrapper {
+  overflow-x: auto;
+}
+
+.itemTable {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.itemTable th,
+.itemTable td {
+  padding: 0.75rem 0.65rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.itemTable th {
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.itemTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.productCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  min-width: 220px;
+}
+
+.productCell strong {
+  color: var(--color-text);
+}
+
+.productCell span,
+.productCell small {
+  color: var(--color-text-muted);
+}
+
+.lineTotal {
+  color: var(--color-text);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.infoGrid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+.infoGrid span {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.infoGrid strong {
+  color: var(--color-text);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.summaryList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.summaryList > div {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.summaryList dt {
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+}
+
+.summaryList dd {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.grandTotal {
+  margin-top: 0.25rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.grandTotal dt,
+.grandTotal dd {
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.paymentPending,
+.paymentPaid,
+.paymentFailed,
+.paymentCancelled,
+.paymentCod {
+  display: inline-flex;
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.paymentPending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.paymentPaid {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.paymentFailed {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.paymentCancelled,
+.paymentCod {
+  background: var(--color-bg-muted);
+  color: var(--color-text-muted);
+}
+
+.backButton,
+.backLink {
+  color: var(--color-primary);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.backButton {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 0.55rem 0;
+}
+
+.backButton:hover,
+.backLink:hover {
+  text-decoration: underline;
+}
+
+.inlineError {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #fecaca;
+  border-radius: 0.6rem;
+  background: #fef2f2;
+  color: var(--color-accent-red);
+  font-size: 0.84rem;
+}
+
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1.2rem;
+  padding: 3rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.8rem;
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.errorState strong {
+  color: var(--color-text);
+}
+
+.loadingHeader,
+.loadingGrid > div {
+  border-radius: 0.8rem;
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-muted) 25%,
+    #f8fafc 50%,
+    var(--color-bg-muted) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+.loadingHeader {
+  width: 280px;
+  height: 36px;
+  margin-bottom: 1.25rem;
+}
+
+.loadingGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 1.1rem;
+}
+
+.loadingGrid > div {
+  height: 360px;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 1000px) {
+  .layout,
+  .loadingGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sideColumn {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .titleRow h1 {
+    font-size: 1.22rem;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .fullWidth {
+    grid-column: auto;
+  }
+}

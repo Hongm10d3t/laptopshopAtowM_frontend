@@ -3,6 +3,13 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 import { logout } from '../../services/auth/authService'
 import styles from './AdminLayout.module.css'
 
+const ORDER_ICON = (
+  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <rect x="3" y="3.2" width="14" height="13.6" rx="2" stroke="currentColor" strokeWidth="1.4" />
+    <path d="M6.2 7h7.6M6.2 10h7.6M6.2 13h4.8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+  </svg>
+)
+
 const CATEGORY_ICON = (
   <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
     <path
@@ -45,10 +52,9 @@ const INVENTORY_ICON = (
   </svg>
 )
 
-// Menu chỉ gồm đúng nghiệp vụ Phase 6 (Catalog & Kho) — Đơn hàng/Khách hàng/
-// Voucher/Báo cáo/Dashboard sẽ thêm dần ở Phase 7-9, KHÔNG dựng sẵn item rỗng
-// ở đây (tránh link chết).
+// Chỉ thêm menu khi màn hình tương ứng đã có route thật, tránh link chết.
 const NAV_ITEMS = [
+  { to: '/admin/orders', label: 'Đơn hàng', icon: ORDER_ICON },
   { to: '/admin/categories', label: 'Danh mục', icon: CATEGORY_ICON },
   { to: '/admin/brands', label: 'Thương hiệu', icon: BRAND_ICON },
   { to: '/admin/products', label: 'Sản phẩm', icon: PRODUCT_ICON },
