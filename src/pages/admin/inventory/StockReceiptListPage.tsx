@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import InventorySectionNav from '../../../components/inventory/InventorySectionNav'
 import { Link } from 'react-router-dom'
 import { listStockReceipts } from '../../../services/inventory/stockReceiptService'
 import { formatDateTime } from '../../../utils/date'
@@ -43,6 +44,7 @@ function StockReceiptListPage() {
 
   return (
     <section>
+      <InventorySectionNav />
       <div className={styles.header}>
         <h1>
           Phiếu nhập kho

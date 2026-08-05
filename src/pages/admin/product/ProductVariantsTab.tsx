@@ -316,8 +316,12 @@ function ProductVariantsTab({ productId }: ProductVariantsTabProps) {
                         <button type="button" className={listStyles.linkButton} onClick={() => startEdit(variant)}>
                           Sửa
                         </button>
-                        <Link to={`/admin/inventory/variants/${variant.id}`} className={listStyles.linkButton}>
-                          Tồn kho
+                        <Link
+                          to={`/admin/inventory/variants/${variant.id}`}
+                          state={{ productId, variantName: variant.variantName }}
+                          className={listStyles.linkButton}
+                        >
+                          Xem tồn kho
                         </Link>
                         <button
                           type="button"

@@ -27,6 +27,7 @@ import BrandFormPage from '../pages/admin/brand/BrandFormPage'
 import AdminProductListPage from '../pages/admin/product/ProductListPage'
 import AdminProductFormPage from '../pages/admin/product/ProductFormPage'
 import AdminProductDetailPage from '../pages/admin/product/ProductDetailPage'
+import InventoryOverviewPage from '../pages/admin/inventory/InventoryOverviewPage'
 import StockReceiptListPage from '../pages/admin/inventory/StockReceiptListPage'
 import StockReceiptFormPage from '../pages/admin/inventory/StockReceiptFormPage'
 import StockReceiptDetailPage from '../pages/admin/inventory/StockReceiptDetailPage'
@@ -105,6 +106,7 @@ function AppRoutes() {
             <Route path="products" element={<AdminProductListPage />} />
             <Route path="products/new" element={<AdminProductFormPage />} />
             <Route path="products/:id" element={<AdminProductDetailPage />} />
+            <Route path="inventory" element={<InventoryOverviewPage />} />
             <Route path="inventory/receipts" element={<StockReceiptListPage />} />
             <Route path="inventory/receipts/new" element={<StockReceiptFormPage />} />
             <Route path="inventory/receipts/:id" element={<StockReceiptDetailPage />} />

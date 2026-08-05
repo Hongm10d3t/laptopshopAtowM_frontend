@@ -122,7 +122,7 @@ const NAV_ITEMS = [
   { to: '/admin/categories', label: 'Danh mục', icon: CATEGORY_ICON },
   { to: '/admin/brands', label: 'Thương hiệu', icon: BRAND_ICON },
   { to: '/admin/products', label: 'Sản phẩm', icon: PRODUCT_ICON },
-  { to: '/admin/inventory/receipts', label: 'Phiếu nhập kho', icon: INVENTORY_ICON },
+  { to: '/admin/inventory', label: 'Kho hàng', icon: INVENTORY_ICON },
   { to: '/admin/vouchers', label: 'Voucher', icon: VOUCHER_ICON },
   { to: '/admin/users', label: 'Người dùng', icon: USER_ICON },
   { to: '/admin/reviews', label: 'Đánh giá', icon: REVIEW_ICON },
