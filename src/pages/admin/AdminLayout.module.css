@@ -199,3 +199,19 @@
     padding: 1.25rem;
   }
 }
+
+/* Phase 8 làm menu dài hơn chiều cao một số màn hình laptop; cho phép phần
+   điều hướng tự cuộn nhưng giữ brand và thông tin tài khoản luôn nhìn thấy. */
+.nav {
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+  scrollbar-width: thin;
+}
+
+@media (max-width: 900px) {
+  .nav {
+    overflow: visible;
+    padding-right: 0;
+  }
+}

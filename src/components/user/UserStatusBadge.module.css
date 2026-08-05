@@ -1,0 +1,25 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.65rem;
+  padding: 0.2rem 0.62rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.blocked {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.pending_verification {
+  background: #fef3c7;
+  color: #b45309;
+}

@@ -86,6 +86,27 @@ const PRODUCT_ICON = (
   </svg>
 )
 
+const VOUCHER_ICON = (
+  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <path d="M3 6.2A2.2 2.2 0 0 0 5.2 4h9.6A2.2 2.2 0 0 0 17 6.2v1.1a2.5 2.5 0 0 0 0 5.4v1.1a2.2 2.2 0 0 0-2.2 2.2H5.2A2.2 2.2 0 0 0 3 13.8v-1.1a2.5 2.5 0 0 0 0-5.4V6.2Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+    <path d="m7.1 12.9 5.8-5.8M7.5 7.4h.01M12.5 12.6h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+)
+
+const USER_ICON = (
+  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <circle cx="10" cy="6.5" r="3" stroke="currentColor" strokeWidth="1.4" />
+    <path d="M4.2 16.3c.5-3 2.5-4.7 5.8-4.7s5.3 1.7 5.8 4.7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+  </svg>
+)
+
+const REVIEW_ICON = (
+  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <path d="M3.2 4.7A1.7 1.7 0 0 1 4.9 3h10.2a1.7 1.7 0 0 1 1.7 1.7v7.2a1.7 1.7 0 0 1-1.7 1.7H9l-3.8 3v-3H4.9a1.7 1.7 0 0 1-1.7-1.7V4.7Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+    <path d="m10 5.5.8 1.6 1.8.3-1.3 1.2.3 1.8-1.6-.9-1.6.9.3-1.8-1.3-1.2 1.8-.3.8-1.6Z" stroke="currentColor" strokeWidth="1" strokeLinejoin="round" />
+  </svg>
+)
+
 const INVENTORY_ICON = (
   <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
     <path d="M2.8 6 10 2.5 17.2 6v8L10 17.5 2.8 14V6Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
@@ -102,6 +123,9 @@ const NAV_ITEMS = [
   { to: '/admin/brands', label: 'Thương hiệu', icon: BRAND_ICON },
   { to: '/admin/products', label: 'Sản phẩm', icon: PRODUCT_ICON },
   { to: '/admin/inventory/receipts', label: 'Phiếu nhập kho', icon: INVENTORY_ICON },
+  { to: '/admin/vouchers', label: 'Voucher', icon: VOUCHER_ICON },
+  { to: '/admin/users', label: 'Người dùng', icon: USER_ICON },
+  { to: '/admin/reviews', label: 'Đánh giá', icon: REVIEW_ICON },
 ]
 
 function AdminLayout() {

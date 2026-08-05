@@ -37,6 +37,11 @@ import AdminReturnRequestListPage from '../pages/admin/return-request/ReturnRequ
 import AdminReturnRequestDetailPage from '../pages/admin/return-request/ReturnRequestDetailPage'
 import AdminPaymentListPage from '../pages/admin/payment/PaymentListPage'
 import AdminPaymentDetailPage from '../pages/admin/payment/PaymentDetailPage'
+import AdminVoucherListPage from '../pages/admin/voucher/VoucherListPage'
+import AdminVoucherFormPage from '../pages/admin/voucher/VoucherFormPage'
+import AdminUserListPage from '../pages/admin/user/UserListPage'
+import AdminUserDetailPage from '../pages/admin/user/UserDetailPage'
+import AdminReviewListPage from '../pages/admin/review/ReviewListPage'
 
 // Route config tập trung tại đây. MainLayout bọc mọi route Storefront (Guest/
 // Customer). Admin có layout riêng (AdminLayout, Phase 6) — KHÔNG lồng trong
@@ -85,6 +90,12 @@ function AppRoutes() {
             <Route path="return-requests/:id" element={<AdminReturnRequestDetailPage />} />
             <Route path="payments" element={<AdminPaymentListPage />} />
             <Route path="payments/:id" element={<AdminPaymentDetailPage />} />
+            <Route path="vouchers" element={<AdminVoucherListPage />} />
+            <Route path="vouchers/new" element={<AdminVoucherFormPage />} />
+            <Route path="vouchers/:id/edit" element={<AdminVoucherFormPage />} />
+            <Route path="users" element={<AdminUserListPage />} />
+            <Route path="users/:id" element={<AdminUserDetailPage />} />
+            <Route path="reviews" element={<AdminReviewListPage />} />
             <Route path="categories" element={<CategoryListPage />} />
             <Route path="categories/new" element={<CategoryFormPage />} />
             <Route path="categories/:id/edit" element={<CategoryFormPage />} />
