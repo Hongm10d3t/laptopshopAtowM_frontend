@@ -37,11 +37,16 @@ export interface ReviewCreateRequest {
 // GET /customer/products/{productId}/reviews/me — yêu cầu đã đăng nhập, trả
 // data=null (200, không phải 404) nếu chưa review — trạng thái hợp lệ của
 // form viết đánh giá, dùng để ẩn/hiện nút "Viết đánh giá".
-export async function getMyReview(productId: number): Promise<ReviewResponse | null> {
-  const response = await apiClient.get<ApiResponse<ReviewResponse | null>>(
-    `/customer/products/${productId}/reviews/me`,
-  )
-  return response.data.data
+export async function getMyReview(
+  productId: number,
+): Promise<ReviewResponse | null> {
+  const response = await apiClient.get<
+    ApiResponse<ReviewResponse | null>
+  >(`/customer/products/${productId}/reviews/me`)
+
+  // Backend bỏ field data khỏi JSON khi data=null do @JsonInclude(NON_NULL).
+  // Chuẩn hóa undefined về null để frontend xử lý đúng.
+  return response.data.data ?? null
 }
 
 // POST /customer/products/{productId}/reviews — Backend tự kiểm tra đã có

@@ -10,6 +10,47 @@ const ORDER_ICON = (
   </svg>
 )
 
+
+
+const PAYMENT_ICON = (
+  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <rect
+      x="2.8"
+      y="4.2"
+      width="14.4"
+      height="11.6"
+      rx="2"
+      stroke="currentColor"
+      strokeWidth="1.4"
+    />
+    <path d="M2.8 7.7h14.4" stroke="currentColor" strokeWidth="1.4" />
+    <path
+      d="M5.5 12.2h3.2M12.8 12.2h1.7"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+    />
+  </svg>
+)
+
+const RETURN_ICON = (
+  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <path
+      d="M6.4 5.2H15a2 2 0 0 1 2 2v6.2a2 2 0 0 1-2 2H7.5"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+    />
+    <path
+      d="m6.4 2.9-3 2.8 3 2.8M3.7 5.7h7.1"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+)
+
 const CATEGORY_ICON = (
   <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
     <path
@@ -55,6 +96,8 @@ const INVENTORY_ICON = (
 // Chỉ thêm menu khi màn hình tương ứng đã có route thật, tránh link chết.
 const NAV_ITEMS = [
   { to: '/admin/orders', label: 'Đơn hàng', icon: ORDER_ICON },
+  { to: '/admin/return-requests', label: 'Trả hàng', icon: RETURN_ICON },
+  { to: '/admin/payments', label: 'Thanh toán', icon: PAYMENT_ICON },
   { to: '/admin/categories', label: 'Danh mục', icon: CATEGORY_ICON },
   { to: '/admin/brands', label: 'Thương hiệu', icon: BRAND_ICON },
   { to: '/admin/products', label: 'Sản phẩm', icon: PRODUCT_ICON },

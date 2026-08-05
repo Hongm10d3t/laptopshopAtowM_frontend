@@ -1,0 +1,619 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-text-muted);
+  font-size: 0.83rem;
+}
+
+.breadcrumb a:hover {
+  color: var(--color-primary);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.titleRow h1 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1.45rem;
+}
+
+.header p {
+  margin: 0.4rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+}
+
+.orderButton {
+  flex-shrink: 0;
+  padding: 0.58rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.55rem;
+  background: var(--color-bg);
+  color: var(--color-primary);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.orderButton:hover {
+  border-color: var(--color-primary);
+  background: #eff6ff;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+  gap: 1.1rem;
+  align-items: start;
+}
+
+.mainColumn,
+.sideColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.sideColumn {
+  position: sticky;
+  top: 1.25rem;
+}
+
+.card {
+  padding: 1.1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.8rem;
+  background: var(--color-bg);
+}
+
+.card h2 {
+  margin: 0 0 1rem;
+  color: var(--color-text);
+  font-size: 0.98rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.cardHeader h2 {
+  margin: 0;
+}
+
+.cardHeader > span {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.cardEyebrow {
+  margin: 0 0 0.2rem;
+  color: var(--color-primary);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.reasonCard {
+  border-color: #bfdbfe;
+  background: linear-gradient(180deg, #f8fbff 0%, var(--color-bg) 80%);
+}
+
+.reasonText {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.statusCardRequested,
+.statusCardApproved,
+.statusCardRejected {
+  border-width: 1px;
+}
+
+.statusCardRequested {
+  border-color: #fde68a;
+  background: #fffbeb;
+}
+
+.statusCardApproved {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
+.statusCardRejected {
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.statusCardRequested h2,
+.statusCardApproved h2,
+.statusCardRejected h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.statusDescription {
+  margin: 0.65rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.itemTableWrapper {
+  overflow-x: auto;
+}
+
+.itemTable {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.itemTable th,
+.itemTable td {
+  padding: 0.75rem 0.65rem;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.itemTable th {
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.itemTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.productCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  min-width: 220px;
+}
+
+.productCell strong {
+  color: var(--color-text);
+}
+
+.productCell span,
+.productCell small {
+  color: var(--color-text-muted);
+}
+
+.lineTotal {
+  color: var(--color-text);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.decisionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.decisionGrid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+.decisionGrid span {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.decisionGrid strong {
+  color: var(--color-text);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.summaryList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.summaryList > div {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.summaryList dt {
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+}
+
+.summaryList dd {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.summaryList a {
+  color: var(--color-primary);
+}
+
+.summaryList a:hover {
+  text-decoration: underline;
+}
+
+.grandTotal {
+  margin-top: 0.25rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.grandTotal dt,
+.grandTotal dd {
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.paymentPending,
+.paymentPaid,
+.paymentFailed,
+.paymentCancelled,
+.paymentCod {
+  display: inline-flex;
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.paymentPending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.paymentPaid {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.paymentFailed {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.paymentCancelled,
+.paymentCod {
+  background: var(--color-bg-muted);
+  color: var(--color-text-muted);
+}
+
+.loadingCard,
+.errorState {
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.8rem;
+  background: var(--color-bg);
+}
+
+.loadingCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.loadingCard span {
+  display: block;
+  width: 65%;
+  height: 16px;
+  border-radius: 0.35rem;
+  background: var(--color-bg-muted);
+}
+
+.loadingCard span:nth-child(2) {
+  width: 86%;
+}
+
+.loadingCard span:nth-child(3) {
+  width: 48%;
+}
+
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+.errorState strong {
+  color: var(--color-text);
+}
+
+.errorState span {
+  color: var(--color-accent-red);
+  font-size: 0.86rem;
+}
+
+.errorState button {
+  margin-top: 0.25rem;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--color-primary);
+  border-radius: 0.5rem;
+  background: var(--color-bg);
+  color: var(--color-primary);
+  font-weight: 750;
+  cursor: pointer;
+}
+
+@media (max-width: 1040px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sideColumn {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+  }
+
+  .orderButton {
+    width: 100%;
+    text-align: center;
+  }
+
+  .titleRow h1 {
+    font-size: 1.25rem;
+  }
+
+  .decisionGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .fullWidth {
+    grid-column: auto;
+  }
+}
+
+.successBanner,
+.actionErrorBanner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  margin-bottom: 1rem;
+  padding: 0.8rem 0.95rem;
+  border-radius: 0.65rem;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.successBanner {
+  border: 1px solid #bbf7d0;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.actionErrorBanner {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.successBanner strong,
+.actionErrorBanner strong {
+  font-size: 0.86rem;
+}
+
+.actionCard {
+  border-color: #bfdbfe;
+  background: linear-gradient(180deg, #f8fbff 0%, var(--color-bg) 88%);
+}
+
+.actionCard h2 {
+  margin-bottom: 0.45rem;
+}
+
+.actionDescription {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.actionButtons {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.approveButton,
+.rejectButton {
+  width: 100%;
+  min-height: 2.55rem;
+  padding: 0.62rem 0.85rem;
+  border-radius: 0.55rem;
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.approveButton {
+  border: 1px solid var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.approveButton:hover {
+  background: var(--color-primary-dark);
+}
+
+.rejectButton {
+  border: 1px solid #fecaca;
+  background: var(--color-bg);
+  color: #b91c1c;
+}
+
+.rejectButton:hover {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.approveButton:focus-visible,
+.rejectButton:focus-visible {
+  outline: 3px solid rgba(26, 86, 219, 0.22);
+  outline-offset: 2px;
+}
+
+.blockedAction {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border: 1px dashed var(--color-border);
+  border-radius: 0.55rem;
+  background: var(--color-bg-muted);
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.blockedAction strong {
+  color: var(--color-text);
+}
+
+.impactList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 0;
+  padding-left: 1.15rem;
+  color: var(--color-text);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.impactList li::marker {
+  color: var(--color-primary);
+}
+
+.refundWarning {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  margin-top: 1rem;
+  padding: 0.75rem 0.82rem;
+  border: 1px solid #fecaca;
+  border-radius: 0.55rem;
+  background: #fef2f2;
+  color: #991b1b;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.refundWarning strong {
+  font-size: 0.82rem;
+}
+
+.noteField {
+  margin-top: 1rem;
+}
+
+.noteHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.45rem;
+}
+
+.noteHeader label {
+  color: var(--color-text);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.noteHeader label span {
+  margin-left: 0.3rem;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+.noteHeader > span {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+}
+
+.noteField textarea {
+  width: 100%;
+  min-height: 6.5rem;
+  resize: vertical;
+  padding: 0.7rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.55rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.noteField textarea:focus {
+  border-color: var(--color-primary);
+  outline: 3px solid rgba(26, 86, 219, 0.14);
+}
+
+.noteField textarea:disabled {
+  background: var(--color-bg-muted);
+  cursor: not-allowed;
+}
+
+.noteField p {
+  margin: 0.4rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}

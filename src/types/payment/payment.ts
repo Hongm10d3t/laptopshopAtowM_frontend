@@ -1,3 +1,5 @@
+import type { PaymentStatus } from '../order/order'
+
 // Khớp PaymentUrlResponse (backend/.../payment/dto/).
 export interface PaymentUrlResponse {
   paymentUrl: string
@@ -10,4 +12,18 @@ export interface VnPayReturnResponse {
   success: boolean
   orderId: number | null
   message: string
+}
+
+// Khớp PaymentResponse của AdminPaymentController. Payment là bản ghi riêng
+// chỉ có với đơn ONLINE; trạng thái chỉ đọc ở Frontend và chỉ thay đổi qua
+// IPN/scheduler/cancel flow phía Backend.
+export interface PaymentResponse {
+  id: number
+  orderId: number
+  amount: number
+  status: PaymentStatus
+  gatewayTransactionNo: string | null
+  expiresAt: string
+  paidAt: string | null
+  createdAt: string
 }

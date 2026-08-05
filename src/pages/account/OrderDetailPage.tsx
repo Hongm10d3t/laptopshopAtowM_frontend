@@ -77,17 +77,57 @@ function OrderDetailPage() {
       setReviewedProductIds(new Set())
       return
     }
+
+    // Xóa kết quả của đơn trước ngay khi chuyển sang đơn mới.
+    setReviewedProductIds(new Set())
+
     const productIds = Array.from(
-      new Set(order.items.map((item) => item.productId).filter((productId): productId is number => productId !== null)),
+      new Set(
+        order.items
+          .map((item) => item.productId)
+          .filter(
+            (productId): productId is number =>
+              productId !== null,
+          ),
+      ),
     )
-    if (productIds.length === 0) return
-    Promise.all(
-      productIds.map((productId) => getMyReview(productId).then((review) => [productId, review !== null] as const)),
-    )
-      .then((results) => {
-        setReviewedProductIds(new Set(results.filter(([, reviewed]) => reviewed).map(([productId]) => productId)))
-      })
-      .catch(() => {})
+
+    if (productIds.length === 0) {
+      return
+    }
+
+    let cancelled = false
+
+    Promise.allSettled(
+      productIds.map(async (productId) => {
+        const review = await getMyReview(productId)
+
+        return {
+          productId,
+          reviewed: review != null,
+        }
+      }),
+    ).then((results) => {
+      if (cancelled) return
+
+      const reviewedIds = results
+        .filter(
+          (
+            result,
+          ): result is PromiseFulfilledResult<{
+            productId: number
+            reviewed: boolean
+          }> => result.status === 'fulfilled',
+        )
+        .filter((result) => result.value.reviewed)
+        .map((result) => result.value.productId)
+
+      setReviewedProductIds(new Set(reviewedIds))
+    })
+
+    return () => {
+      cancelled = true
+    }
   }, [order])
 
   async function handleCancelOrder() {

@@ -33,6 +33,10 @@ import StockReceiptDetailPage from '../pages/admin/inventory/StockReceiptDetailP
 import VariantInventoryPage from '../pages/admin/inventory/VariantInventoryPage'
 import AdminOrderListPage from '../pages/admin/order/OrderListPage'
 import AdminOrderDetailPage from '../pages/admin/order/OrderDetailPage'
+import AdminReturnRequestListPage from '../pages/admin/return-request/ReturnRequestListPage'
+import AdminReturnRequestDetailPage from '../pages/admin/return-request/ReturnRequestDetailPage'
+import AdminPaymentListPage from '../pages/admin/payment/PaymentListPage'
+import AdminPaymentDetailPage from '../pages/admin/payment/PaymentDetailPage'
 
 // Route config tập trung tại đây. MainLayout bọc mọi route Storefront (Guest/
 // Customer). Admin có layout riêng (AdminLayout, Phase 6) — KHÔNG lồng trong
@@ -77,6 +81,10 @@ function AppRoutes() {
             <Route index element={<CategoryListPage />} />
             <Route path="orders" element={<AdminOrderListPage />} />
             <Route path="orders/:id" element={<AdminOrderDetailPage />} />
+            <Route path="return-requests" element={<AdminReturnRequestListPage />} />
+            <Route path="return-requests/:id" element={<AdminReturnRequestDetailPage />} />
+            <Route path="payments" element={<AdminPaymentListPage />} />
+            <Route path="payments/:id" element={<AdminPaymentDetailPage />} />
             <Route path="categories" element={<CategoryListPage />} />
             <Route path="categories/new" element={<CategoryFormPage />} />
             <Route path="categories/:id/edit" element={<CategoryFormPage />} />
