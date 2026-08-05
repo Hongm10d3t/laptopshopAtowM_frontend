@@ -3,6 +3,15 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 import { logout } from '../../services/auth/authService'
 import styles from './AdminLayout.module.css'
 
+const DASHBOARD_ICON = (
+  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <rect x="3" y="3" width="5.5" height="5.5" rx="1.2" stroke="currentColor" strokeWidth="1.4" />
+    <rect x="11.5" y="3" width="5.5" height="5.5" rx="1.2" stroke="currentColor" strokeWidth="1.4" />
+    <rect x="3" y="11.5" width="5.5" height="5.5" rx="1.2" stroke="currentColor" strokeWidth="1.4" />
+    <rect x="11.5" y="11.5" width="5.5" height="5.5" rx="1.2" stroke="currentColor" strokeWidth="1.4" />
+  </svg>
+)
+
 const ORDER_ICON = (
   <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
     <rect x="3" y="3.2" width="14" height="13.6" rx="2" stroke="currentColor" strokeWidth="1.4" />
@@ -116,16 +125,17 @@ const INVENTORY_ICON = (
 
 // Chỉ thêm menu khi màn hình tương ứng đã có route thật, tránh link chết.
 const NAV_ITEMS = [
-  { to: '/admin/orders', label: 'Đơn hàng', icon: ORDER_ICON },
-  { to: '/admin/return-requests', label: 'Trả hàng', icon: RETURN_ICON },
-  { to: '/admin/payments', label: 'Thanh toán', icon: PAYMENT_ICON },
-  { to: '/admin/categories', label: 'Danh mục', icon: CATEGORY_ICON },
-  { to: '/admin/brands', label: 'Thương hiệu', icon: BRAND_ICON },
-  { to: '/admin/products', label: 'Sản phẩm', icon: PRODUCT_ICON },
-  { to: '/admin/inventory', label: 'Kho hàng', icon: INVENTORY_ICON },
-  { to: '/admin/vouchers', label: 'Voucher', icon: VOUCHER_ICON },
-  { to: '/admin/users', label: 'Người dùng', icon: USER_ICON },
-  { to: '/admin/reviews', label: 'Đánh giá', icon: REVIEW_ICON },
+  { to: '/admin', label: 'Tổng quan', icon: DASHBOARD_ICON, end: true },
+  { to: '/admin/orders', label: 'Đơn hàng', icon: ORDER_ICON, end: false },
+  { to: '/admin/return-requests', label: 'Trả hàng', icon: RETURN_ICON, end: false },
+  { to: '/admin/payments', label: 'Thanh toán', icon: PAYMENT_ICON, end: false },
+  { to: '/admin/categories', label: 'Danh mục', icon: CATEGORY_ICON, end: false },
+  { to: '/admin/brands', label: 'Thương hiệu', icon: BRAND_ICON, end: false },
+  { to: '/admin/products', label: 'Sản phẩm', icon: PRODUCT_ICON, end: false },
+  { to: '/admin/inventory', label: 'Kho hàng', icon: INVENTORY_ICON, end: false },
+  { to: '/admin/vouchers', label: 'Voucher', icon: VOUCHER_ICON, end: false },
+  { to: '/admin/users', label: 'Người dùng', icon: USER_ICON, end: false },
+  { to: '/admin/reviews', label: 'Đánh giá', icon: REVIEW_ICON, end: false },
 ]
 
 function AdminLayout() {
@@ -156,6 +166,7 @@ function AdminLayout() {
             <NavLink
               key={item.to}
               to={item.to}
+              end={item.end}
               className={({ isActive }) => (isActive ? styles.navLinkActive : styles.navLink)}
             >
               <span className={styles.navIcon}>{item.icon}</span>

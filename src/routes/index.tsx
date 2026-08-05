@@ -43,6 +43,7 @@ import AdminVoucherFormPage from '../pages/admin/voucher/VoucherFormPage'
 import AdminUserListPage from '../pages/admin/user/UserListPage'
 import AdminUserDetailPage from '../pages/admin/user/UserDetailPage'
 import AdminReviewListPage from '../pages/admin/review/ReviewListPage'
+import AdminDashboardPage from '../pages/admin/dashboard/DashboardPage'
 
 // Route config tập trung tại đây. MainLayout bọc mọi route Storefront (Guest/
 // Customer). Admin có layout riêng (AdminLayout, Phase 6) — KHÔNG lồng trong
@@ -84,7 +85,8 @@ function AppRoutes() {
       <Route element={<AuthGuard />}>
         <Route element={<RoleGuard allowedRoles={['ADMIN']} />}>
           <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<CategoryListPage />} />
+            <Route index element={<AdminDashboardPage />} />
+            <Route path="dashboard" element={<AdminDashboardPage />} />
             <Route path="orders" element={<AdminOrderListPage />} />
             <Route path="orders/:id" element={<AdminOrderDetailPage />} />
             <Route path="return-requests" element={<AdminReturnRequestListPage />} />
